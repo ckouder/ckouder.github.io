@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { createEventDispatcher } from "svelte";
+  import { createEventDispatcher, onMount } from "svelte";
   export const minSize = 200;
   export const dbclickSpan = 200;
   export const transition = 0.5;
@@ -25,15 +25,24 @@
     left: 200,
     right: 200,
     top: 100,
-    bottom: 100
+    bottom: 100,
   };
+  let previousWindowSize: WindowSize = {} as WindowSize;
+
+  onMount(() => {
+    saveCurrentWindowSize();
+    windowSize = { ...previousWindowSize };
+  })
 
   export function getDOMElement() {
     return w;
   }
 
+  export function getWindowSize() {
+    return { ...windowSize };
+  }
+
   export function resize(size: WindowSize, withAnimation: boolean = false) {
-    getWindowSize();
     if (withAnimation) {
       w.style.transition = `all ${transition}s`;
     }
@@ -43,9 +52,10 @@
     w.style.left = `${size.left}px`;
     if (withAnimation) {
       setTimeout(() => {
-        w.style.transition = '';
+        w.style.transition = "";
       }, transition * 1000);
     }
+    windowSize = { ...size };
 
     dispatch("resize", {
       target: w,
@@ -74,190 +84,206 @@
     });
   }
 
-  function getWindowSize() {
-    windowSize.top = w.getBoundingClientRect().top;
-    windowSize.left = w.getBoundingClientRect().left;
-    windowSize.bottom = window.innerHeight - w.getBoundingClientRect().bottom;
-    windowSize.right = window.innerWidth - w.getBoundingClientRect().right;
+  export function saveCurrentWindowSize() {
+    previousWindowSize.top = w.getBoundingClientRect().top;
+    previousWindowSize.left = w.getBoundingClientRect().left;
+    previousWindowSize.bottom = window.innerHeight - w.getBoundingClientRect().bottom;
+    previousWindowSize.right = window.innerWidth - w.getBoundingClientRect().right;
   }
 
-  function onFocusWindow(e: MouseEvent) {
+  function onWindowClicked(e: MouseEvent) {
     dispatch("focus", {
       target: w,
-      DOMEvent: e
-    })
-  }
-
-  function focusOnResizeEl(e: MouseEvent) {
-    resizeEl = e.target as HTMLElement;
-    getWindowSize();
-    resizeEl.style.transform = `scale(100, 100) translateZ(100px)`;
-    dispatch("resizeStart", {
-      target: w,
-      DOMEvent: e
+      DOMEvent: e,
     });
   }
 
-  function focusOnRepositionEl(e: MouseEvent) {
-    numberOfClick += 1;
-    if (numberOfClick === 1) {
-      clickTimer = setTimeout(() => {
-        repositionShouldTrigger = true;
-        getWindowSize();
-        (e.target as HTMLElement).style.transform = "scale(100, 100)";
-        (e.target as HTMLElement).style.zIndex = "10";
-        numberOfClick = 0;
-      }, dbclickSpan);
-    }
-    if (numberOfClick === 2) {
-      clearTimeout(clickTimer);
-      numberOfClick = 0;
-    }
-    dispatch("repositionStart", {
-      target: w,
-      DOMEvent: e
-    });
+  function onTitleBarDbClicked() {
+    resize(previousWindowSize, true);
   }
 
-  function shrinkWindow(event: Event) {
-    resize({
-      top: windowSize.top,
-      bottom: window.innerHeight - windowSize.top - 30,
-      left: windowSize.left,
-      right: window.innerWidth - windowSize.left - 200
-    }, true);
-    getWindowSize();
+  function onMinBtnClicked(event: Event) {
+    resize(
+      {
+        top: windowSize.top,
+        bottom: window.innerHeight - windowSize.top - 30,
+        left: windowSize.left,
+        right: window.innerWidth - windowSize.left - 200,
+      },
+      true
+    );
   }
 
-  function expandWindow(event: Event) {
-    resize({
-      top: fullWindowMargin,
-      left: fullWindowMargin,
-      right: fullWindowMargin,
-      bottom: fullWindowMargin
-    }, true);
+  function onMaxBtnClicked(event: Event) {
+    resize(
+      {
+        top: fullWindowMargin,
+        left: fullWindowMargin,
+        right: fullWindowMargin,
+        bottom: fullWindowMargin,
+      },
+      true
+    );
   }
 
-  function putBackWindow() {
-    resize(windowSize, true);
-  }
+  let resizeHandlers = {
+    start: (e: MouseEvent) => {
+      resizeEl = e.target as HTMLElement;
+      resizeEl.style.transform = `scale(100, 100) translateZ(100px)`;
+      saveCurrentWindowSize();
+      dispatch("resizeStart", {
+        target: w,
+        DOMEvent: e,
+      });
+    },
 
-  function moveOnResizeEl(e: MouseEvent) {
-    if (resizeEl === undefined) return;
-    let r = window.innerWidth - e.clientX,
+    tick: (e: MouseEvent) => {
+      if (resizeEl === undefined) return;
+      let r = window.innerWidth - e.clientX,
         b = window.innerHeight - e.clientY;
-    let oldWindowSize = { ...windowSize };
 
-    resize({
-      top: resizeEl.dataset["tag"].includes('top') ? e.clientY : windowSize.top, 
-      left: resizeEl.dataset["tag"].includes('left') ? e.clientX : windowSize.left, 
-      right: resizeEl.dataset["tag"].includes('right') ? r : windowSize.right, 
-      bottom: resizeEl.dataset["tag"].includes('bottom') ? b : windowSize.bottom
-    });
+      let size = {
+        top: resizeEl.dataset["tag"].includes("top") ? e.clientY : windowSize.top,
+        left: resizeEl.dataset["tag"].includes("left")
+          ? e.clientX
+          : windowSize.left,
+        right: resizeEl.dataset["tag"].includes("right") ? r : windowSize.right,
+        bottom: resizeEl.dataset["tag"].includes("bottom")
+          ? b
+          : windowSize.bottom,
+      };
 
-    let newBoundingBox = w.getBoundingClientRect();
-    if (newBoundingBox.width < minSize) {
-      if (resizeEl.dataset["tag"].includes("right")) {
-        w.style.right = `${oldWindowSize.right}px`;
-      } else {
-        w.style.left = `${oldWindowSize.left}px`;
+      if (window.innerWidth - size.right - size.left < minSize) {
+        if (resizeEl.dataset["tag"].includes("right")) {
+          size.right = windowSize.right;
+        } else {
+          size.left = windowSize.left;
+        }
       }
-    }
 
-    if (newBoundingBox.height < minSize) {
-      if (resizeEl.dataset["tag"].includes("top")) {
-        w.style.top = `${oldWindowSize.top}px`;
-      } else {
-        w.style.bottom = `${oldWindowSize.bottom}px`;
+      if (window.innerHeight - size.bottom - size.top < minSize) {
+        if (resizeEl.dataset["tag"].includes("top")) {
+          size.top = windowSize.top;
+        } else {
+          size.bottom = windowSize.bottom;
+        }
       }
+
+      resize(size);
+    },
+
+    end: (e: MouseEvent) => {
+      if (resizeEl !== undefined) {
+        resizeEl.style.transform = `scale(1, 1) translateZ(0px)`;
+      }
+      resizeEl = undefined;
+      dispatch("resizeEnd", {
+        target: w,
+        DOMEvent: e,
+      });
     }
   }
 
-  function moveOnRepositionEl(e: MouseEvent) {
-    if (!repositionShouldTrigger) return;
+  let repositionHandlers = {
+    start: (e: MouseEvent) => {
+      numberOfClick += 1;
+      if (numberOfClick === 1) {
+        clickTimer = setTimeout(() => {
+          repositionShouldTrigger = true;
+          (e.target as HTMLElement).style.transform = "scale(100, 100)";
+          (e.target as HTMLElement).style.zIndex = "10";
+          numberOfClick = 0;
+        }, dbclickSpan);
+      }
+      if (numberOfClick === 2) {
+        clearTimeout(clickTimer);
+        numberOfClick = 0;
+      }
+      dispatch("repositionStart", {
+        target: w,
+        DOMEvent: e,
+      });
+    },
 
-    reposition(e.movementX, e.movementY);
-  }
+    tick: (e: MouseEvent) => {
+      if (!repositionShouldTrigger) return;
+      reposition(e.movementX, e.movementY);
+    },
 
-  function cancelFocusOnResizeEl(e: MouseEvent) {
-    if (resizeEl !== undefined) {
-      resizeEl.style.transform = `scale(1, 1) translateZ(0px)`;
+    end: (e: MouseEvent) => {
+      (e.target as HTMLElement).style.transform = "scale(1, 1)";
+      (e.target as HTMLElement).style.zIndex = "0";
+      repositionShouldTrigger = false;
+      dispatch("repositionEnd", {
+        target: w,
+        DOMEvent: e,
+      });
     }
-    resizeEl = undefined;
-    dispatch("resizeEnd", {
-      target: w,
-      DOMEvent: e
-    });
-  }
-
-  function cancelFocusOnRepositionEl(e: MouseEvent) {
-    (e.target as HTMLElement).style.transform = "scale(1, 1)";
-    (e.target as HTMLElement).style.zIndex = "0";
-    repositionShouldTrigger = false;
-    dispatch("repositionEnd", {
-      target: w,
-      DOMEvent: e
-    });
   }
 </script>
 
-<div class:focused={focus} class="window" bind:this={w} on:mousedown={onFocusWindow}>
+<div
+  class:focused={focus}
+  class="window"
+  bind:this={w}
+  on:mousedown={onWindowClicked}
+>
   <div class="resize-controller">
     <div
       data-tag="left"
       class="ctrl ctrl-left"
-      on:mousedown={focusOnResizeEl}
-      on:mousemove={moveOnResizeEl}
-      on:mouseup={cancelFocusOnResizeEl}
+      on:mousedown={resizeHandlers.start}
+      on:mousemove={resizeHandlers.tick}
+      on:mouseup={resizeHandlers.end}
     />
     <div
       data-tag="top"
       class="ctrl ctrl-top"
-      on:mousedown={focusOnResizeEl}
-      on:mousemove={moveOnResizeEl}
-      on:mouseup={cancelFocusOnResizeEl}
+      on:mousedown={resizeHandlers.start}
+      on:mousemove={resizeHandlers.tick}
+      on:mouseup={resizeHandlers.end}
     />
     <div
       data-tag="right"
       class="ctrl ctrl-right"
-      on:mousedown={focusOnResizeEl}
-      on:mousemove={moveOnResizeEl}
-      on:mouseup={cancelFocusOnResizeEl}
+      on:mousedown={resizeHandlers.start}
+      on:mousemove={resizeHandlers.tick}
+      on:mouseup={resizeHandlers.end}
     />
     <div
       data-tag="bottom"
       class="ctrl ctrl-bottom"
-      on:mousedown={focusOnResizeEl}
-      on:mousemove={moveOnResizeEl}
-      on:mouseup={cancelFocusOnResizeEl}
+      on:mousedown={resizeHandlers.start}
+      on:mousemove={resizeHandlers.tick}
+      on:mouseup={resizeHandlers.end}
     />
     <div
       data-tag="top-left"
       class="ctrl ctrl-square ctrl-top-left"
-      on:mousedown={focusOnResizeEl}
-      on:mousemove={moveOnResizeEl}
-      on:mouseup={cancelFocusOnResizeEl}
+      on:mousedown={resizeHandlers.start}
+      on:mousemove={resizeHandlers.tick}
+      on:mouseup={resizeHandlers.end}
     />
     <div
       data-tag="top-right"
       class="ctrl ctrl-square ctrl-top-right"
-      on:mousedown={focusOnResizeEl}
-      on:mousemove={moveOnResizeEl}
-      on:mouseup={cancelFocusOnResizeEl}
+      on:mousedown={resizeHandlers.start}
+      on:mousemove={resizeHandlers.tick}
+      on:mouseup={resizeHandlers.end}
     />
     <div
       data-tag="bottom-left"
       class="ctrl ctrl-square ctrl-bottom-left"
-      on:mousedown={focusOnResizeEl}
-      on:mousemove={moveOnResizeEl}
-      on:mouseup={cancelFocusOnResizeEl}
+      on:mousedown={resizeHandlers.start}
+      on:mousemove={resizeHandlers.tick}
+      on:mouseup={resizeHandlers.end}
     />
     <div
       data-tag="bottom-right"
       class="ctrl ctrl-square ctrl-bottom-right"
-      on:mousedown={focusOnResizeEl}
-      on:mousemove={moveOnResizeEl}
-      on:mouseup={cancelFocusOnResizeEl}
+      on:mousedown={resizeHandlers.start}
+      on:mousemove={resizeHandlers.tick}
+      on:mouseup={resizeHandlers.end}
     />
   </div>
   <div class="toolbar">
@@ -266,14 +292,14 @@
     </div>
     <div
       class="inflator"
-      on:mousedown={focusOnRepositionEl}
-      on:mousemove={moveOnRepositionEl}
-      on:mouseup={cancelFocusOnRepositionEl}
-      on:dblclick={putBackWindow}
+      on:mousedown={repositionHandlers.start}
+      on:mousemove={repositionHandlers.tick}
+      on:mouseup={repositionHandlers.end}
+      on:dblclick={onTitleBarDbClicked}
     />
     <div class="btn-container">
-      <div class="btn btn-max" on:mouseup={expandWindow}><span>◻︎</span></div>
-      <div class="btn btn-min" on:mouseup={shrinkWindow}><span>-</span></div>
+      <div class="btn btn-max" on:mouseup={onMaxBtnClicked}><span>◻︎</span></div>
+      <div class="btn btn-min" on:mouseup={onMinBtnClicked}><span>-</span></div>
     </div>
   </div>
   <hr />
@@ -368,7 +394,7 @@
         border: solid 0.5px #f00
         cursor: pointer
         background: #eee
-      .btn-max, .btn-min, .btn-close
+      .btn-max, .btn-min
         line-height: 100%
         height: 15px
         width: 15px

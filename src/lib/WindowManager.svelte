@@ -43,6 +43,18 @@
     },
   };
 
+  export function enterWindowSelectMode(mode: string, idx: number = undefined) {
+    let candidateWindows = windowComps.filter((v, i) => i !== idx);
+    candidateWindows.forEach((v) => {
+      let windowSize = v.getWindowSize();
+      windowSize.left /= 10;
+      windowSize.top /= 10;
+      windowSize.bottom = window.innerHeight - ((window.innerHeight - windowSize.bottom - windowSize.top) / 5 + windowSize.top);
+      windowSize.right = window.innerWidth - ((window.innerWidth - windowSize.right - windowSize.left) / 5 + windowSize.left)
+      v.resize(windowSize, true);
+    });
+  }
+
   function onWindowResize(dimension) {
     console.log("resize received: ", dimension);
   }
@@ -94,6 +106,7 @@
     };
 
     target.resize(size, true);
+    enterWindowSelectMode('left', idx);
     shouldReposition = false;
   }
 
@@ -122,56 +135,147 @@
   {/each}
   {#if shouldReposition}
     <div class="resize-controller" bind:this={resizeController}>
-      <div data-tag="left" class="ctrl ctrl-left" />
-      <div data-tag="top" class="ctrl ctrl-top" />
-      <div data-tag="right" class="ctrl ctrl-right" />
-      <div data-tag="bottom" class="ctrl ctrl-bottom" />
+      <div data-tag="left" class="ctrl" />
+      <div data-tag="top" class="ctrl" />
+      <div data-tag="right" class="ctrl" />
+      <div data-tag="bottom" class="ctrl" />
     </div>
   {/if}
+  <div class="resizer-container">
+    <div class="resizer" data-tag="top"/>
+    <div class="resizer" data-tag="bottom"/>
+    <div class="resizer" data-tag="left"/>
+    <div class="resizer" data-tag="right"/>
+    <div class="resizer" data-tag="top-bottom"/>
+    <div class="resizer" data-tag="left-right"/>
+  </div>
 </div>
 
 <style lang="sass">
   $ctrl-short: 5%
   $ctrl-long: calc(100% - $ctrl-short * 2)
   $ctrl-offset: $ctrl-short
+  $resizer-short: 14px
+  $resizer-long: 60px
+
+  @mixin resizer-style
+    box-sizing: border-box
+    display: block
+    position: absolute
+    border-radius: $resizer-short
+    background: white
+    border: 2px solid black
+    cursor: grab
+    content: ""
+
+  *
+    box-sizing: border-box
 
   .container
     overflow: hidden
 
   .resize-controller
-    box-sizing: border-box
     position: absolute
     left: 0
     top: 0
     width: 100%
     height: 100%
     pointer-events: none
+
     .ctrl
-      box-sizing: border-box
       position: absolute
       padding: 0
       margin: 0
       pointer-events: none
       transform-style: preserve-3d
       cursor: grabbing
-    .ctrl-left
-      left: 0
-      top: $ctrl-offset
-      height: $ctrl-long
-      width: $ctrl-short
-    .ctrl-top
-      top: 0
-      left: $ctrl-offset
-      width: $ctrl-long
-      height: $ctrl-short
-    .ctrl-right
-      right: 0
-      top: $ctrl-offset
-      width: $ctrl-short
-      height: $ctrl-long
-    .ctrl-bottom
-      bottom: 0
-      left: $ctrl-offset
-      width: $ctrl-long
-      height: $ctrl-short
+
+      &[data-tag=left]
+        left: 0
+        top: $ctrl-offset
+        height: $ctrl-long
+        width: $ctrl-short
+
+      &[data-tag=top]
+        top: 0
+        left: $ctrl-offset
+        width: $ctrl-long
+        height: $ctrl-short
+
+      &[data-tag=right]
+        right: 0
+        top: $ctrl-offset
+        width: $ctrl-short
+        height: $ctrl-long
+
+      &[data-tag=bottom]
+        bottom: 0
+        left: $ctrl-offset
+        width: $ctrl-long
+        height: $ctrl-short
+
+  .resizer-container
+    position: absolute
+    left: 0
+    top: 0
+    width: 100%
+    height: 100%
+    user-select: none
+    pointer-events: none
+
+    .resizer
+      position: absolute
+      pointer-events: all
+
+      &[data-tag="top-bottom"]
+        left: calc(50% - $resizer-short / 2)
+        top: 0
+        width: $resizer-short
+        height: 100%
+
+        &:before
+          @include resizer-style
+          top: calc(50% - $resizer-long / 2)
+          left: 0%
+          width: $resizer-short
+          height: $resizer-long 
+
+      &[data-tag="left-right"]
+        left: 0
+        top: calc(50% - $resizer-short / 2)
+        width: 100%
+        height: $resizer-short
+
+        &:before
+          @include resizer-style
+          top: calc(50% - $resizer-short / 2)
+          left: calc(50% - $resizer-long / 2)
+          width: $resizer-long
+          height: $resizer-short
+
+      // &[data-tag="left"]
+      //   left: 0
+      //   top: calc(50% - $resizer-short / 2)
+      //   width: 50%
+      //   height: $resizer-short
+
+      //   &:before
+      //     @include resizer-style
+      //     top: calc(50% - $resizer-short / 2)
+      //     left: calc(50% - $resizer-long / 2)
+      //     width: $resizer-long
+      //     height: $resizer-short
+
+      // &[data-tag="right"]
+      //   right: 0
+      //   top: calc(50% - $resizer-short / 2)
+      //   width: 50%
+      //   height: $resizer-short
+
+      //   &:before
+      //     @include resizer-style
+      //     top: calc(50% - $resizer-short / 2)
+      //     left: calc(50% - $resizer-long / 2)
+      //     width: $resizer-long
+      //     height: $resizer-short
 </style>
