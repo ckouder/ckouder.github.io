@@ -1,7 +1,7 @@
 <script lang="ts">
   import { createEventDispatcher, onMount } from "svelte";
   export const minSize = 200;
-  export const dbclickSpan = 200;
+  export const dbclickSpan = 300;
   export const transition = 0.5;
   export const fullWindowMargin = 20;
   const dispatch = createEventDispatcher();
@@ -42,7 +42,7 @@
     return { ...windowSize };
   }
 
-  export function resize(size: WindowSize, withAnimation: boolean = false) {
+  export function resize(size: WindowSize, withAnimation: boolean = false, triggerEvent: boolean = true) {
     if (withAnimation) {
       w.style.transition = `all ${transition}s`;
     }
@@ -57,31 +57,47 @@
     }
     windowSize = { ...size };
 
-    dispatch("resize", {
-      target: w,
-      data: size,
-    });
+    if (triggerEvent) {
+      dispatch("resize", {
+        target: w,
+        data: size,
+      });
+    }
   }
 
-  export function reposition(deltaX: number, deltaY: number) {
+  export function scale(x, y, withAnimation: boolean = true) {
+    if (withAnimation) {
+      w.style.transition = `all ${transition}s`;
+    }
+    w.style.transform = `scale(${x}, ${y})`;
+    if (withAnimation) {
+      setTimeout(() => {
+        w.style.transition = ``;
+      }, transition * 1000);
+    }
+  }
+
+  export function reposition(deltaX: number, deltaY: number, triggerEvent: boolean = true) {
     windowSize.top += deltaY;
     windowSize.left += deltaX;
     windowSize.right -= deltaX;
     windowSize.bottom -= deltaY;
 
-    if (windowSize.bottom > 0 && windowSize.top > 0) {
+    if (windowSize.bottom >= 0 && windowSize.top >= 0) {
       w.style.top = `${windowSize.top}px`;
       w.style.bottom = `${windowSize.bottom}px`;
     }
-    if (windowSize.right > 0 && windowSize.left > 0) {
+    if (windowSize.right >= 0 && windowSize.left >= 0) {
       w.style.left = `${windowSize.left}px`;
       w.style.right = `${windowSize.right}px`;
     }
 
-    dispatch("reposition", {
-      target: w,
-      data: { deltaX, deltaY },
-    });
+    if (triggerEvent) {
+      dispatch("reposition", {
+        target: w,
+        data: { deltaX, deltaY },
+      });
+    }
   }
 
   export function saveCurrentWindowSize() {
@@ -96,10 +112,6 @@
       target: w,
       DOMEvent: e,
     });
-  }
-
-  function onTitleBarDbClicked() {
-    resize(previousWindowSize, true);
   }
 
   function onMinBtnClicked(event: Event) {
@@ -188,21 +200,27 @@
     start: (e: MouseEvent) => {
       numberOfClick += 1;
       if (numberOfClick === 1) {
+        repositionShouldTrigger = true;
         clickTimer = setTimeout(() => {
-          repositionShouldTrigger = true;
+          if (!repositionShouldTrigger) {
+            numberOfClick = 0;
+            return;
+          }
           (e.target as HTMLElement).style.transform = "scale(100, 100)";
           (e.target as HTMLElement).style.zIndex = "10";
+          console.log('single click triggered');
           numberOfClick = 0;
+          dispatch("repositionStart", {
+            target: w,
+            DOMEvent: e,
+          });
         }, dbclickSpan);
-      }
-      if (numberOfClick === 2) {
+      } else if (numberOfClick >= 2) {
         clearTimeout(clickTimer);
+        console.log('double click triggered');
+        resize(previousWindowSize, true);
         numberOfClick = 0;
       }
-      dispatch("repositionStart", {
-        target: w,
-        DOMEvent: e,
-      });
     },
 
     tick: (e: MouseEvent) => {
@@ -295,7 +313,6 @@
       on:mousedown={repositionHandlers.start}
       on:mousemove={repositionHandlers.tick}
       on:mouseup={repositionHandlers.end}
-      on:dblclick={onTitleBarDbClicked}
     />
     <div class="btn-container">
       <div class="btn btn-max" on:mouseup={onMaxBtnClicked}><span>◻︎</span></div>

@@ -1,10 +1,18 @@
 <script lang="ts">
   import Window from "./Window.svelte";
 
+  enum WindowMode {
+    NORMAL,
+    SELECT
+  };
+
   let resizeController: HTMLDivElement;
   let shouldReposition: boolean;
   let windows = [1, 2, 3];
   let windowComps = [];
+  let selectDirection: string;
+  let mode: WindowMode = WindowMode.NORMAL;
+  let focusWindowIdx: number;
 
   let AABB = {
     collide: function (el1, el2) {
@@ -43,20 +51,72 @@
     },
   };
 
-  export function enterWindowSelectMode(mode: string, idx: number = undefined) {
+  export function enterWindowSelectMode(dir: string, idx: number = undefined) {
     let candidateWindows = windowComps.filter((v, i) => i !== idx);
     candidateWindows.forEach((v) => {
-      let windowSize = v.getWindowSize();
-      windowSize.left /= 10;
-      windowSize.top /= 10;
-      windowSize.bottom = window.innerHeight - ((window.innerHeight - windowSize.bottom - windowSize.top) / 5 + windowSize.top);
-      windowSize.right = window.innerWidth - ((window.innerWidth - windowSize.right - windowSize.left) / 5 + windowSize.left)
-      v.resize(windowSize, true);
+      v.scale(0.7, 0.7);
     });
+    mode = WindowMode.SELECT;
+    selectDirection = dir;
+  }
+
+  export function exitWindowSelectMode(idx: number = undefined) {
+    windowComps.forEach((v, i) => {
+      let domV = v.getDOMElement();
+      domV.style.transition = `all 0.5s`;
+      domV.style.transform = ``;
+      if (i === idx) {
+        let size = v.getWindowSize();
+        let deltaX = 0, deltaY = 0;
+        let newSize = { 
+          top: v.fullWindowMargin, 
+          left: v.fullWindowMargin, 
+          right: v.fullWindowMargin, 
+          bottom: v.fullWindowMargin 
+        };
+        if (selectDirection.includes('left')) {
+          newSize.left = window.innerWidth / 2 - 1;
+          deltaX = -newSize.left + window.innerWidth / 2 - 1;
+        }
+        if (selectDirection.includes('right')) {
+          newSize.right = window.innerWidth / 2 - 1;
+          deltaX = -newSize.left + v.fullWindowMargin;
+        }
+        if (selectDirection.includes('top')) {
+          newSize.top = window.innerHeight / 2 - 1;
+          if (selectDirection.includes('left') || selectDirection.includes('right'))
+            deltaY = -newSize.top + v.fullWindowMargin;
+          else
+            deltaY = -newSize.top + window.innerHeight / 2 - 1;
+        }
+        if (selectDirection.includes('bottom')) {
+          newSize.bottom = window.innerHeight / 2 - 1;
+          if (selectDirection.includes('left') || selectDirection.includes('right'))
+            deltaY = -newSize.top + window.innerHeight / 2 - 1;
+          else
+            deltaY = -newSize.top + v.fullWindowMargin;
+        }
+        v.resize(newSize, true, false);
+        v.reposition(deltaX, deltaY, false);
+      }
+      setTimeout(() => {
+        domV.style.transition = ``;
+      }, 1000);
+    });
+    mode = WindowMode.NORMAL;
+    selectDirection = '';
   }
 
   function onWindowResize(dimension) {
     console.log("resize received: ", dimension);
+  }
+
+  function onWindowFocus(event: CustomEvent, idx: number) {
+    if (mode === WindowMode.SELECT) {
+      exitWindowSelectMode(idx);
+    } else {
+      focusWindowIdx = idx;
+    }
   }
 
   function onWindowRepositionStart(event: CustomEvent, idx: number) {
@@ -86,28 +146,36 @@
       containBottom =
         eventTargets.filter((e) => e.dataset.tag.includes("bottom")).length > 0;
     let target = windowComps[idx];
-    let size = {
-      top:
-        eventTargets.length === 2
-          ? containTop
-            ? target.fullWindowMargin
-            : containBottom 
-              ? window.innerHeight / 2 - 1
-              : target.fullWindowMargin
-          : target.fullWindowMargin,
-      bottom:
-        eventTargets.length === 2
-          ? containBottom
-            ? target.fullWindowMargin
-            : window.innerHeight / 2 - 1
-          : target.fullWindowMargin,
-      left: containRight ? window.innerWidth / 2 - 1 : target.fullWindowMargin,
-      right: containLeft ? window.innerWidth / 2 - 1 : target.fullWindowMargin,
+    let newSize = {
+      top: target.fullWindowMargin,
+      bottom: target.fullWindowMargin,
+      right: target.fullWindowMargin,
+      left: target.fullWindowMargin
     };
+    let verticalMode = containTop ? "top" : containBottom ? "bottom" : "",
+      horizontalMode = containLeft ? "left" : containRight ? "right" : "",
+      mode = verticalMode
+        ? horizontalMode
+          ? `${verticalMode}-${horizontalMode}`
+          : verticalMode
+        : horizontalMode
+        ? horizontalMode
+        : "";
+    if (containRight) {
+      newSize.left = window.innerWidth / 2 - 1;
+    }
+    if (containLeft) {
+      newSize.right = window.innerWidth / 2 - 1;
+    }
+    if (containBottom) {
+      newSize.top = window.innerHeight / 2 - 1;
+    }
+    if (containTop) {
+      newSize.bottom = window.innerHeight / 2 - 1;
+    }
 
-    target.resize(size, true);
-    enterWindowSelectMode('left', idx);
-    shouldReposition = false;
+    target.resize(newSize, true, false);
+    enterWindowSelectMode(mode, idx);
   }
 
   function onWindowRepositioning(event: CustomEvent, idx: number) {
@@ -126,28 +194,27 @@
   {#each windows as w, i}
     <Window
       title="Hello World This is Bingji"
-      focus={false}
+      focus={focusWindowIdx === i}
       bind:this={windowComps[i]}
       on:repositionStart={(e) => onWindowRepositionStart(e, i)}
       on:repositionEnd={(e) => onWindowRepositionEnd(e, i)}
       on:reposition={(e) => onWindowRepositioning(e, i)}
+      on:focus={(e) => onWindowFocus(e, i)}
     />
   {/each}
-  {#if shouldReposition}
-    <div class="resize-controller" bind:this={resizeController}>
-      <div data-tag="left" class="ctrl" />
-      <div data-tag="top" class="ctrl" />
-      <div data-tag="right" class="ctrl" />
-      <div data-tag="bottom" class="ctrl" />
-    </div>
-  {/if}
+  <div class="resize-controller" bind:this={resizeController}>
+    <div data-tag="left" class="ctrl" />
+    <div data-tag="top" class="ctrl" />
+    <div data-tag="right" class="ctrl" />
+    <div data-tag="bottom" class="ctrl" />
+  </div>
   <div class="resizer-container">
-    <div class="resizer" data-tag="top"/>
-    <div class="resizer" data-tag="bottom"/>
-    <div class="resizer" data-tag="left"/>
-    <div class="resizer" data-tag="right"/>
-    <div class="resizer" data-tag="top-bottom"/>
-    <div class="resizer" data-tag="left-right"/>
+    <div class="resizer" data-tag="top" />
+    <div class="resizer" data-tag="bottom" />
+    <div class="resizer" data-tag="left" />
+    <div class="resizer" data-tag="right" />
+    <div class="resizer" data-tag="top-bottom" />
+    <div class="resizer" data-tag="left-right" />
   </div>
 </div>
 
