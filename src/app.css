@@ -1,0 +1,13 @@
+* {
+    box-sizing: border-box;
+    font-family: "Helvetica Neue", serif;
+    margin: 0;
+    padding: 0;
+
+    -webkit-user-select: none !important;
+    user-select: none !important;
+}
+
+body {
+    background: repeating-linear-gradient(50deg, #000 0px, #000 0.7px, #fff 0.7px, #fff 2.2px);
+}
