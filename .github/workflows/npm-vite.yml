@@ -1,6 +1,8 @@
 name: NodeJS with vite
 
 on:
+  push:
+    branches: [ "development" ]
   pull_request:
     branches: [ "development" ]
 
