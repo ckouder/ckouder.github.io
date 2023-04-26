@@ -18,17 +18,17 @@
       {
         title: "Favorites",
         items: [
-          { icon: "src/assets/airdrop@2x.png", title: "AirDrop" },
-          { icon: "src/assets/app@2x.png", title: "Applications" },
-          { icon: "src/assets/menubar.dock.rectangle@2x.png", title: "Desktop" },
-          { icon: "src/assets/doc@2x.png", title: "Documents" },
+          { icon: "assets/images/airdrop@2x.png", title: "AirDrop" },
+          { icon: "assets/images/app@2x.png", title: "Applications" },
+          { icon: "assets/images/menubar.dock.rectangle@2x.png", title: "Desktop" },
+          { icon: "assets/images/doc@2x.png", title: "Documents" },
         ]
       },
       {
         title: "iCloud",
         items: [
-          { icon: "src/assets/icloud@2x.png", title: "iCloud Drive" },
-          { icon: "src/assets/folder.badge.person.crop@2x.png", title: "Shared" },
+          { icon: "assets/images/icloud@2x.png", title: "iCloud Drive" },
+          { icon: "assets/images/folder.badge.person.crop@2x.png", title: "Shared" },
         ]
       }
     ];
@@ -50,10 +50,10 @@
 >
   <div class="toolbar" slot="toolbar">
     <button class="btn btn-backwards">
-      <img src="src/assets/chevron.backward@2x.png" />
+      <img src="assets/images/chevron.backward@2x.png" alt="backward"/>
     </button>
     <button class="btn btn-forwards">
-      <img src="src/assets/chevron.forward@2x.png" />
+      <img src="assets/images/chevron.forward@2x.png" alt="forward"/>
     </button>
     <h4>{title}</h4>
     <div class="btn-group-container">
@@ -63,23 +63,23 @@
         class:no-visibility={windowWidth <= HIDE_VIEW}
       >
         <button class="btn btn-view focused">
-          <img src="src/assets/square.grid.2x2@2x.png" />
+          <img src="assets/images/square.grid.2x2@2x.png" alt="square"/>
           {#if windowWidth <= HIDE_VIEW_EP}
-            <img src="src/assets/chevron.up.chevron.down@2x.png" />
+            <img src="assets/images/chevron.up.chevron.down@2x.png" alt="view up"/>
           {/if}
         </button>
         <span class="btn-group" class:no-display={windowWidth <= HIDE_VIEW_EP}>
           <span class="vertical-sep" />
           <button class="btn btn-view-list">
-            <img src="src/assets/list.bullet@2x.png" />
+            <img src="assets/images/list.bullet@2x.png" alt="list"/>
           </button>
           <span class="vertical-sep" />
           <button class="btn btn-view-panel">
-            <img src="src/assets/rectangle.split.3x1@2x.png" />
+            <img src="assets/images/rectangle.split.3x1@2x.png" alt="split"/>
           </button>
           <span class="vertical-sep" />
           <button class="btn btn-view-gallery">
-            <img src="src/assets/squares.below.rectangle@2x.png" />
+            <img src="assets/images/squares.below.rectangle@2x.png" alt="gallary"/>
           </button>
         </span>
       </div>
@@ -88,27 +88,27 @@
           class="btn btn-filter"
           class:no-visibility={windowWidth <= HIDE_FILTER}
         >
-          <img src="src/assets/square.grid.3x1.below.line.grid.1x2@2x.png" />
-          <img src="src/assets/chevron.down@2x.png" />
+          <img src="assets/images/square.grid.3x1.below.line.grid.1x2@2x.png" alt="panel"/>
+          <img src="assets/images/chevron.down@2x.png" alt="more"/>
         </button>
         <button
           class="btn btn-share"
           class:no-visibility={windowWidth <= HIDE_SHARE}
         >
-          <img src="src/assets/square.and.arrow.up@2x.png" />
+          <img src="assets/images/square.and.arrow.up@2x.png" alt="up"/>
         </button>
         <button
           class="btn btn-tag"
           class:no-visibility={windowWidth <= HIDE_TAG}
         >
-          <img src="src/assets/tag@2x.png" />
+          <img src="assets/images/tag@2x.png" alt="tag"/>
         </button>
         <button
           class="btn btn-more"
           class:no-visibility={windowWidth <= HIDE_MORE}
         >
-          <img src="src/assets/ellipsis.circle@2x.png" />
-          <img src="src/assets/chevron.down@2x.png" />
+          <img src="assets/images/ellipsis.circle@2x.png" alt="more"/>
+          <img src="assets/images/chevron.down@2x.png" alt="more"/>
         </button>
       </div>
       {#if windowWidth > HIDE_SEARCH_EP}
@@ -120,14 +120,14 @@
     <div class="search-group">
       {#if windowWidth <= HIDE_MORE}
         <button class="btn btn-hide">
-          <img src="src/assets/chevron.forward.2@2x.png" />
+          <img src="assets/images/chevron.forward.2@2x.png" alt="forward"/>
         </button>
       {/if}
       <button
         class="btn btn-search"
         class:no-display={windowWidth > HIDE_SEARCH_EP}
       >
-        <img src="src/assets/magnifyingglass@2x.png" />
+        <img src="assets/images/magnifyingglass@2x.png" alt="search"/>
       </button>
       <div
         class="input-search"
@@ -162,7 +162,7 @@
     {#if title === 'Applications'}
       <div class="content-panel">
         <Item title="chess">
-          <img src="src/assets/chess-knight-2.png" alt="chess" slot="icon" height="60px" width="60px">
+          <img src="assets/images/chess-knight-2.png" alt="chess" slot="icon" height="60px" width="60px">
         </Item>
       </div>
     {:else if title === 'Desktop'}
@@ -244,7 +244,7 @@
       left: 5px
       height: 12px
       width: 12px
-      background: url("src/assets/magnifyingglass@2x.png")
+      background: url("/assets/images/magnifyingglass@2x.png")
       background-size: cover
       content: ''
 

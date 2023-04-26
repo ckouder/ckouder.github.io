@@ -25,7 +25,7 @@
     main {
         width: calc(100vw);
         height: calc(100vh);
-        background: url('src/assets/IMG_4614.jpeg');
+        background: url('/assets/images/IMG_4614.jpeg');
         background-size: cover;
         overflow: hidden;
     }

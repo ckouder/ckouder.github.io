@@ -13,7 +13,7 @@
             {title}
             {#if showFoldBtn}
                 <button on:click={() => {fold = !fold}}>
-                    <img src="src/assets/chevron.down@2x.png" class:folded={fold}>
+                    <img src="assets/images/chevron.down@2x.png" class:folded={fold} alt="show more">
                 </button>
             {/if}
         </h5>

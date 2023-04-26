@@ -1,8 +1,8 @@
 <div class="deck">
-    <div class="item" style="background-image: url('src/assets/finder.png');"></div>
-    <div class="item" style="background-image: url('src/assets/launchpad.png');"></div>
-    <div class="item" style="background-image: url('src/assets/safari.png');"></div>
-    <div class="item" style="background-image: url('src/assets/system-preferences.png');"></div>
+    <div class="item" style="background-image: url('assets/images/finder.png');"></div>
+    <div class="item" style="background-image: url('assets/images/launchpad.png');"></div>
+    <div class="item" style="background-image: url('assets/images/safari.png');"></div>
+    <div class="item" style="background-image: url('assets/images/system-preferences.png');"></div>
 </div>
 
 <style lang="scss">

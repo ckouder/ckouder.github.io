@@ -323,17 +323,6 @@
             on:close={(e) => onWindowClose(e, i)}
         >
         </svelte:component>
-        <!-- <Window
-            focus={focusWindowIdx === i}
-            config={w}
-            disabled={w.disabled}
-            bind:this={windowComps[i]}
-            on:repositionStart={(e) => onWindowRepositionStart(e, i)}
-            on:repositionEnd={(e) => onWindowRepositionEnd(e, i)}
-            on:reposition={(e) => onWindowRepositioning(e, i)}
-            on:focus={(e) => onWindowFocus(e, i)}
-            on:close={(e) => onWindowClose(e, i)}
-        /> -->
     {/each}
     <div bind:this={resizeController} class="resize-controller">
         <div class="ctrl" data-tag="left"></div>
@@ -341,14 +330,6 @@
         <div class="ctrl" data-tag="right"></div>
         <div class="ctrl" data-tag="bottom"></div>
     </div>
-    <!-- <div class="resizer-container">
-      <div class="resizer" data-tag="top" />
-      <div class="resizer" data-tag="bottom" />
-      <div class="resizer" data-tag="left" />
-      <div class="resizer" data-tag="right" />
-      <div class="resizer" data-tag="top-bottom" />
-      <div class="resizer" data-tag="left-right" />
-    </div> -->
 </div>
 
 <style lang="sass">
@@ -413,69 +394,4 @@
         left: $ctrl-offset
         width: $ctrl-long
         height: $ctrl-short
-
-  .resizer-container
-    position: absolute
-    left: 0
-    top: 0
-    width: 100%
-    height: 100%
-    user-select: none
-    pointer-events: none
-
-    .resizer
-      position: absolute
-      pointer-events: all
-
-      &[data-tag="top-bottom"]
-        left: calc(50% - $resizer-short / 2)
-        top: 0
-        width: $resizer-short
-        height: 100%
-
-        &:before
-          @include resizer-style
-          top: calc(50% - $resizer-long / 2)
-          left: 0
-          width: $resizer-short
-          height: $resizer-long
-
-      &[data-tag="left-right"]
-        left: 0
-        top: calc(50% - $resizer-short / 2)
-        width: 100%
-        height: $resizer-short
-
-        &:before
-          @include resizer-style
-          top: calc(50% - $resizer-short / 2)
-          left: calc(50% - $resizer-long / 2)
-          width: $resizer-long
-          height: $resizer-short
-
-  // &[data-tag="left"]
-  //   left: 0
-  //   top: calc(50% - $resizer-short / 2)
-  //   width: 50%
-  //   height: $resizer-short
-
-  //   &:before
-  //     @include resizer-style
-  //     top: calc(50% - $resizer-short / 2)
-  //     left: calc(50% - $resizer-long / 2)
-  //     width: $resizer-long
-  //     height: $resizer-short
-
-  // &[data-tag="right"]
-  //   right: 0
-  //   top: calc(50% - $resizer-short / 2)
-  //   width: 50%
-  //   height: $resizer-short
-
-  //   &:before
-  //     @include resizer-style
-  //     top: calc(50% - $resizer-short / 2)
-  //     left: calc(50% - $resizer-long / 2)
-  //     width: $resizer-long
-  //     height: $resizer-short
 </style>

@@ -1,22 +1,22 @@
 <div class="toolbar">
     <div class="app-toolbar-container">
         <button>
-            <img src="src/assets/apple.logo.svg" alt="apple" />
+            <img src="assets/images/apple.logo.svg" alt="apple" />
         </button>
         <slot />
     </div>
     <div class="status-container">
         <button>
-            <img src="src/assets/battery.100.svg" alt="battery" />
+            <img src="assets/images/battery.100.svg" alt="battery" />
         </button>
         <button>
-            <img src="src/assets/wifi.svg" alt="wifi" />
+            <img src="assets/images/wifi.svg" alt="wifi" />
         </button>
         <button>
-            <img src="src/assets/magnifyingglass.svg" alt="search" />
+            <img src="assets/images/magnifyingglass.svg" alt="search" />
         </button>
         <button>
-            <img src="src/assets/switch.2.svg" alt="switch" />
+            <img src="assets/images/switch.2.svg" alt="switch" />
         </button>
         <button>
             <span>Sun Apr 23 9:53 PM</span>
