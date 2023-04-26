@@ -1,42 +1,42 @@
 export const switchable = (node: HTMLElement, child: string) => {
-    let children = node.querySelectorAll(child);
+	let children = node.querySelectorAll(child);
 
-    let focusFn = (i: number) => () => {
-        node.dispatchEvent(new CustomEvent('focus', {
-            detail: children[i]
-        }));
-    };
+	let focusFn = (i: number) => () => {
+		node.dispatchEvent(new CustomEvent('focus', {
+			detail: children[i]
+		}));
+	};
 
-    let onChildFocusFn = (e: CustomEvent) => {
-        children.forEach((child: HTMLElement) => child.classList.remove('focused'));
-        e.detail.classList.add('focused');
-    };
+	let onChildFocusFn = (e: CustomEvent) => {
+		children.forEach((child: HTMLElement) => child.classList.remove('focused'));
+		e.detail.classList.add('focused');
+	};
 
-    let mount = () => {
-        children.forEach((child: HTMLElement, i: number) => {
-            child.addEventListener('click', focusFn(i));
-        });
+	let mount = () => {
+		children.forEach((child: HTMLElement, i: number) => {
+			child.addEventListener('click', focusFn(i));
+		});
 
-        node.addEventListener('focus', onChildFocusFn);
-    };
+		node.addEventListener('focus', onChildFocusFn);
+	};
 
-    mount();
+	mount();
 
-    return {
-        destroy: () => {
-            children.forEach((e: HTMLElement, i: number) =>
-                e.removeEventListener('click', focusFn(i)));
-            node.removeEventListener('focus', onChildFocusFn);
-        },
-    };
+	return {
+		destroy: () => {
+			children.forEach((e: HTMLElement, i: number) =>
+				e.removeEventListener('click', focusFn(i)));
+			node.removeEventListener('focus', onChildFocusFn);
+		},
+	};
 }
 
 export const mouseTracker = (node: HTMLElement, controllerId: string = undefined) => {
-    const controller = controllerId === undefined ? node : node.querySelector(`#${controllerId}`);
-    let x;
-    let y;
+	const controller = controllerId === undefined ? node : node.querySelector(`#${controllerId}`);
+	let x;
+	let y;
 
-    let handleMousedown = (event: MouseEvent) => {
+	let handleMousedown = (event: MouseEvent) => {
 		x = event.clientX;
 		y = event.clientY;
 
