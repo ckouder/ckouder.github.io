@@ -4,13 +4,15 @@
   import { mouseTracker } from "./utils/actions";
   import { FULL_WINDOW_MARGIN, MIN_SIZE, TRANSITION } from "./utils/constants";
   import type { WindowConfig } from "./utils/types";
+  import { currentWindow, topZIndex } from "./stores/windows";
+  import { get } from "svelte/store";
 
-  export let focus: boolean = false;
   export let config: WindowConfig = undefined;
   export let disabled: boolean = false;
   export let blur: boolean = false;
   export let noResize: boolean = false;
-
+  
+  export const ID = Math.random().toString(36).substring(2, 9);
   export const transformAPI = {
     transform: (str: string, withAnimation: boolean = true) => {
       doWithAnimation(withAnimation, () => {
@@ -31,11 +33,8 @@
     bottom: number;
   };
 
-  let numberOfClick = 0,
-    clickTimer;
   let w: HTMLDivElement;
   let resizeEl: HTMLElement;
-  let repositionShouldTrigger: boolean;
   let windowSize: WindowSize = {
     left: 200,
     right: 200,
@@ -47,6 +46,7 @@
     left: 0,
     top: 0,
   };
+  let focused = false;
 
   const dispatch = createEventDispatcher();
   const HIDE_SIDEBAR_EP = 500;
@@ -65,19 +65,25 @@
         false
       );
       reposition(config.x, config.y, false);
-      repositionZ(config.z);
       saveCurrentWindowSize();
     }
     windowSize = { ...previousWindowSize };
+    setTimeout(() => {
+      dispatch('ready', w);
+    });
   });
-
-  $: if (focus && w) {
-    repositionZ(config.z);
-  }
 
   $: width = window.innerWidth - windowSize.left - windowSize.right;
   $: height = window.innerHeight - windowSize.top - windowSize.bottom;
   $: resizeDisabled = disabled || noResize;
+
+  currentWindow.subscribe((v) => {
+    focused = v === w;
+    if (v === w) {
+      w.style.zIndex = `${get(topZIndex) + 1}`;
+      topZIndex.update((v) => v + 1);
+    }
+  })
 
   export function getWindowSize() {
     return { ...windowSize };
@@ -160,18 +166,15 @@
     }
   }
 
-  function onWindowClicked(e: MouseEvent) {
-    dispatch("focus", {
-      target: w,
-      DOMEvent: e,
-    });
+  function onWindowClicked() {
+    currentWindow.set(w);
   }
 
-  function onCloseBtnClicked(event: Event) {
-    w.parentNode.removeChild(w);
+  function onCloseBtnClicked() {
+    dispatch('destroy');
   }
 
-  function onMinBtnClicked(event: Event) {
+  function onMinBtnClicked() {
     if (resizeDisabled) return;
     resize(
       {
@@ -184,7 +187,7 @@
     );
   }
 
-  function onMaxBtnClicked(event: Event) {
+  function onMaxBtnClicked() {
     if (resizeDisabled) return;
     resize(
       {
@@ -197,8 +200,8 @@
     );
   }
 
-  let resizeHandler = (e: MouseEvent) => {
-    let tick = (e: MouseEvent) => {
+  function resizeHandler(e: MouseEvent) {
+    function tick(e: MouseEvent) {
       if (resizeDisabled) return;
       if (resizeEl === undefined) return;
       let r = window.innerWidth - e.clientX,
@@ -236,7 +239,7 @@
       resize(size);
     };
 
-    let end = (e: MouseEvent) => {
+    function end(e: MouseEvent) {
       if (resizeEl !== undefined) {
         resizeEl.style.transform = `scale(1, 1) translateZ(0px)`;
       }
@@ -264,7 +267,7 @@
     });
   };
 
-  let onRepositionStart = (e: CustomEvent) => {
+  function onRepositionStart(e: CustomEvent) {
     if (disabled) return;
     saveCurrentWindowSize();
     repositionOffset.left = windowSize.left - e.detail.x;
@@ -275,7 +278,7 @@
     });
   };
 
-  let onReposition = (e: CustomEvent) => {
+  function onReposition(e: CustomEvent) {
     if (disabled) return;
     reposition(
       e.detail.x + repositionOffset.left,
@@ -283,7 +286,7 @@
     );
   };
 
-  let onRepositionEnd = (e: CustomEvent) => {
+  function onRepositionEnd(e: CustomEvent) {
     if (disabled) return;
     dispatch("repositionEnd", {
       target: w,
@@ -301,7 +304,7 @@
   on:trackUpdate={onReposition}
   on:trackEnd={onRepositionEnd}
 >
-  <div class="window" class:focused={focus} on:mousedown={onWindowClicked}>
+  <div class="window" class:nofocus={!focused} on:mousedown={onWindowClicked}>
     <div class="toolbar">
       <div id="reposition-controller" />
       <div class="btn-container">
@@ -663,26 +666,9 @@
     }
   }
 
-  .window.focused {
+  .window.nofocus {
     transform-style: preserve-3d;
     z-index: 1000;
-  }
-
-  .window.focused::after {
-    position: absolute;
-    display: block;
-    top: $window-shadow;
-    left: $window-shadow;
-    width: 100%;
-    height: 100%;
-    background: repeating-linear-gradient(
-      50deg,
-      #000 0px,
-      #000 $window-shadow-stripe,
-      #fff $window-shadow-stripe,
-      #fff 2.2px
-    );
-    border: $window-shadow-stripe solid #000;
-    content: "";
+    background: #ececec;
   }
 </style>

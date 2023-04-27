@@ -1,5 +1,5 @@
 <script lang="ts">
-  import Window from "./Window.svelte";
+  import type Window from "./Window.svelte";
   import { FULL_WINDOW_MARGIN, MIN_SIZE } from "./utils/constants";
 
   enum WindowMode {
@@ -324,16 +324,9 @@
 </script>
 
 <div class="container">
-  {#each windows as w, i}
-    <svelte:component
-      this={w}
-      on:repositionStart={(e) => onWindowRepositionStart(e, i)}
-      on:repositionEnd={(e) => onWindowRepositionEnd(e, i)}
-      on:reposition={(e) => onWindowRepositioning(e, i)}
-      on:focus={(e) => onWindowFocus(e, i)}
-      on:close={(e) => onWindowClose(e, i)}
-    />
-  {/each}
+  <!-- {#each windows as w}
+    <svelte:component this={w}/>
+  {/each} -->
   <div bind:this={resizeController} class="resize-controller">
     <div class="ctrl" data-tag="left" />
     <div class="ctrl" data-tag="top" />

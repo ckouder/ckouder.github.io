@@ -5,6 +5,8 @@
 
 <Window
   config={{ x: 100, y: 100, z: 0, width: 260, height: 400 }}
+  on:ready
+  on:destroy
   noResize
   blur
 >
@@ -35,7 +37,7 @@
         <ul>
           <s><li>UI</li></s>
           <li>Tooltip</li>
-          <li>Open App</li>
+          <s><li>Open App</li></s>
         </ul>
       </li>
       <li>

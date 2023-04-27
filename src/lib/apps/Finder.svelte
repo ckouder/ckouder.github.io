@@ -2,9 +2,11 @@
   import Window from "../Window.svelte";
   import { switchable } from "../utils/actions";
   import Foldable from "../Foldable.svelte";
-  import Item from "./my-computer/Item.svelte";
+  import Item from "./Finder/Item.svelte";
 
-  export let title: string = "Recents";
+  export let title: string = "Applications";
+
+  export const APP_NAME = 'Finder';
 
   const HIDE_SEARCH_EP = 1100,
     HIDE_VIEW_EP = 1000,
@@ -52,6 +54,8 @@
 
 <Window
   on:resize={onWindowResize}
+  on:ready
+  on:destroy
   config={{ x: 100, y: 100, z: 0, width: 800, height: 600 }}
 >
   <div class="toolbar" slot="toolbar">
@@ -162,7 +166,7 @@
       <Foldable title={foldable.title}>
         <ul slot="itemsToFold">
           {#each foldable.items as item}
-            <li>
+            <li class:focused={title === item.title}>
               <div>
                 <img class="sidebar-icon" src={item.icon} alt={item.title} />
               </div>
@@ -199,7 +203,7 @@
     transition: opacity 0.3s, transform 0.3s;
   }
   .focused {
-    background: #e1dfe1c3;
+    background: #0000001f;
   }
   .no-display,
   .no-display * {

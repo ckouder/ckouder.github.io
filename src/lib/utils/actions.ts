@@ -33,8 +33,8 @@ export const switchable = (node: HTMLElement, child: string) => {
 
 export const mouseTracker = (node: HTMLElement, controllerId: string = undefined) => {
 	const controller = controllerId === undefined ? node : node.querySelector(`#${controllerId}`);
-	let x;
-	let y;
+	let x: number;
+	let y: number;
 
 	let handleMousedown = (event: MouseEvent) => {
 		x = event.clientX;

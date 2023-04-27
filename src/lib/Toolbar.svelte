@@ -1,6 +1,14 @@
+<script lang="ts">
+    import type { ComponentType } from "svelte";
+    import About from "./apps/About.svelte";
+    import { tryOpenNewApp } from "./stores/windows";
+
+    let AboutType: ComponentType = About;
+
+</script>
 <div class="toolbar">
   <div class="app-toolbar-container">
-    <button>
+    <button on:click={() => tryOpenNewApp(AboutType, null)}>
       <img src="assets/images/apple.logo.svg" alt="apple" />
     </button>
     <slot />
