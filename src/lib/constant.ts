@@ -1,4 +1,4 @@
-export const MIN_SIZE: number = 200;
+export const MIN_SIZE: number = 300;
 
 export const DB_CLICK_SPAN: number = 180;
 

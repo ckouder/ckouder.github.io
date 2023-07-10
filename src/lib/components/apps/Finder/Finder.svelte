@@ -21,6 +21,7 @@
 		HIDE_SHARE = HIDE_TAG - DELTA,
 		HIDE_FILTER = HIDE_SHARE - DELTA,
 		HIDE_VIEW = HIDE_FILTER - DELTA - 40,
+		HIDE_NAV = HIDE_VIEW - DELTA - 250,
 		SIDEBAR_FOLDABLES = [
 			{
 				title: 'Favorites',
@@ -165,12 +166,14 @@
 	config={{ x: 100, y: 100, z: 0, width: 800, height: 600 }}
 >
 	<div class="toolbar" slot="toolbar">
-		<button class="btn btn-backwards">
-			<img src="assets/chevron.backward@2x.png" alt="backward" />
-		</button>
-		<button class="btn btn-forwards">
-			<img src="assets/chevron.forward@2x.png" alt="forward" />
-		</button>
+		{#if windowWidth > HIDE_NAV}
+			<button class="btn btn-backwards">
+				<img src="assets/chevron.backward@2x.png" alt="backward" />
+			</button>
+			<button class="btn btn-forwards">
+				<img src="assets/chevron.forward@2x.png" alt="forward" />
+			</button>
+		{/if}
 		<h4>{title}</h4>
 		<div class="btn-group-container">
 			<div class="btn-group btn-group-view mr-40" class:no-visibility={windowWidth <= HIDE_VIEW}>
