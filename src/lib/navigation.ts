@@ -9,5 +9,6 @@ export function visit(url: string) {
         tryOpenApp(URL_APP.get(app));
     }
     history.pushState({}, '', url);
+    // console.log(url);
     goto(url);
 }

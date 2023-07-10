@@ -17,7 +17,12 @@ export const URL_APP = new Map<string, ComponentType>([
 ])
 
 export const getAppUrl = (appComp: ComponentType<App>) => {
-	return `/${appComp.name.toLowerCase().split(/proxy<(.*)>/)[1]}`;
+	for (let [key, value] of URL_APP) {
+		if (value === appComp) {
+			return `/${key}`;
+		}
+	}
+	return '/';
 }
 
 export let appWindows = new Map<ComponentType<App>, HTMLElement | null>();
