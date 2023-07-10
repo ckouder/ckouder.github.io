@@ -8,6 +8,28 @@
 		top: false,
 		left: true
 	};
+	let time = setupTime();
+
+	setInterval(() => {
+		time = setupTime();
+	}, 1000);
+
+	function setupTime() {
+		const dateTime = new Date();
+		const weekday = dateTime.toLocaleDateString(undefined, {
+			weekday: "short",
+		});
+		const date = dateTime.toLocaleDateString(undefined, {
+			month: "short", 
+			day: "numeric",
+		});
+		const time = dateTime.toLocaleTimeString(undefined, {
+			hour: 'numeric',
+			minute: 'numeric',
+		});
+		const str = `${weekday} ${date} ${time}`;
+		return str;
+	}
 
 	function onItemClicked(e: CustomEvent) {
 		menu.items.find((i) => i.value === e.detail.dataset.value).action();
@@ -35,7 +57,7 @@
 			<img src="assets/switch.2.svg" alt="switch" />
 		</button>
 		<button>
-			<span>Sun Apr 23 9:53 PM</span>
+			<span>{time}</span>
 		</button>
 	</div>
 </div>
