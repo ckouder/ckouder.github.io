@@ -44,7 +44,7 @@
 				Toolbar
 				<ul>
 					<s><li>UI</li></s>
-					<li>Time</li>
+					<s><li>Time</li></s>
 					<li>Control Center</li>
 					<li>Notification Center</li>
 				</ul>
