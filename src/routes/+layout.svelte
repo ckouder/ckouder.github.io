@@ -1,6 +1,10 @@
 <script lang="ts">
 	import Deck from '$lib/components/apps/Deck/Deck.svelte';
 	import Toolbar from '$lib/components/apps/Menubar/Menubar.svelte';
+	import { dev } from '$app/environment';
+	import { inject } from '@vercel/analytics';
+ 
+	inject({ mode: dev ? 'development' : 'production' });
 </script>
 
 <main>
