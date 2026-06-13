@@ -1,0 +1,114 @@
+/* Function-first defaults: readable text column, system fonts, no decoration. */
+
+* {
+	box-sizing: border-box;
+}
+
+html {
+	color-scheme: light dark;
+}
+
+body {
+	margin: 0;
+	font-family:
+		ui-sans-serif,
+		system-ui,
+		-apple-system,
+		'Segoe UI',
+		Helvetica,
+		Arial,
+		sans-serif;
+	font-size: 1rem;
+	line-height: 1.6;
+	color: #111;
+	background: #fff;
+}
+
+@media (prefers-color-scheme: dark) {
+	body {
+		color: #e6e6e6;
+		background: #111;
+	}
+}
+
+main,
+header,
+footer {
+	max-width: 42rem;
+	margin: 0 auto;
+	padding: 0 1.25rem;
+}
+
+header {
+	padding-top: 2rem;
+	padding-bottom: 1rem;
+}
+
+main {
+	padding-bottom: 3rem;
+}
+
+footer {
+	padding-top: 1rem;
+	padding-bottom: 2.5rem;
+	font-size: 0.875rem;
+}
+
+h1 {
+	font-size: 1.5rem;
+	line-height: 1.3;
+	margin: 0;
+}
+
+h2 {
+	font-size: 1.125rem;
+	margin: 2rem 0 0.5rem;
+}
+
+a {
+	color: inherit;
+	text-underline-offset: 0.15em;
+}
+
+a:hover {
+	text-decoration-thickness: 2px;
+}
+
+nav a {
+	margin-right: 1rem;
+}
+
+nav a[aria-current='page'] {
+	text-decoration: none;
+	font-weight: 600;
+}
+
+img {
+	display: block;
+	width: 100%;
+	height: auto;
+}
+
+figure {
+	margin: 1.5rem 0;
+}
+
+figcaption {
+	font-size: 0.875rem;
+	margin-top: 0.5rem;
+}
+
+ul.plain {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+}
+
+ul.plain li {
+	margin: 0 0 1.25rem;
+}
+
+.meta {
+	font-size: 0.875rem;
+	opacity: 0.75;
+}

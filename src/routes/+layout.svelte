@@ -1,47 +1,40 @@
 <script lang="ts">
-	import Deck from '$lib/components/apps/Deck/Deck.svelte';
-	import Toolbar from '$lib/components/apps/Menubar/Menubar.svelte';
+	import '../app.css';
+	import { page } from '$app/state';
 	import { dev } from '$app/environment';
 	import { inject } from '@vercel/analytics';
- 
+	import { site } from '$lib/content';
+
+	let { children } = $props();
+
 	inject({ mode: dev ? 'development' : 'production' });
+
+	const navItems = [
+		{ href: '/', label: 'Works' },
+		{ href: '/statement', label: 'Statement' },
+		{ href: '/about', label: 'About' }
+	];
+
+	function isCurrent(href: string): boolean {
+		return href === '/' ? page.url.pathname === '/' : page.url.pathname.startsWith(href);
+	}
 </script>
 
+<header>
+	<h1><a href="/" style="text-decoration: none">{site.artist}</a></h1>
+	<nav aria-label="Main">
+		{#each navItems as item (item.href)}
+			<a href={item.href} aria-current={isCurrent(item.href) ? 'page' : undefined}>
+				{item.label}
+			</a>
+		{/each}
+	</nav>
+</header>
+
 <main>
-	<div class="toolbar-container">
-		<Toolbar />
-	</div>
-	<div class="deck-container">
-		<Deck />
-	</div>
-	<div id="root" />
-    <slot/>
+	{@render children()}
 </main>
 
-<style lang="scss">
-	main {
-		width: calc(100vw);
-		height: calc(100vh);
-		background: url('/assets/bg.jpg');
-		background-size: cover;
-		overflow: hidden;
-	}
-
-	.toolbar-container {
-		position: fixed;
-		top: 0;
-		left: 0;
-		width: 100%;
-	}
-
-	.deck-container {
-		position: fixed;
-		bottom: 5px;
-		left: 0;
-		width: 100%;
-		display: flex;
-		justify-content: center;
-		align-items: center;
-		z-index: 9999;
-	}
-</style>
+<footer>
+	<p class="meta">© {new Date().getFullYear()} {site.artist}</p>
+</footer>

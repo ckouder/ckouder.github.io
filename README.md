@@ -1,38 +1,21 @@
-# create-svelte
+# Bingji Guo — Portfolio
 
-Everything you need to build a Svelte project, powered by [`create-svelte`](https://github.com/sveltejs/kit/tree/master/packages/create-svelte).
+Art portfolio and artist statement. Plain, function-first SvelteKit site, fully prerendered.
 
-## Creating a project
+## Editing content
 
-If you're seeing this, you've probably already done this step. Congrats!
+- **Works** — edit `src/lib/content.ts`. Each work is one entry; a commented template is at the bottom of the `works` array.
+- **Images** — put files in `static/works/<slug>/` and reference them as `/works/<slug>/<file>` with alt text.
+- **Artist statement** — edit `src/routes/statement/+page.svelte` (plain paragraphs).
+- **Bio / contact** — edit `src/routes/about/+page.svelte` and the `contact` object in `src/lib/content.ts`.
 
-```bash
-# create a new project in the current directory
-npm create svelte@latest
-
-# create a new project in my-app
-npm create svelte@latest my-app
-```
-
-## Developing
-
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
+## Commands
 
 ```bash
-npm run dev
-
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
+npm run dev          # local dev server
+npm run build        # production build (static, via adapter-vercel)
+npm run preview      # serve the production build
+npm test             # unit tests (content validation)
+npm run test:integration  # playwright smoke tests
+npm run check        # type checking
 ```
-
-## Building
-
-To create a production version of your app:
-
-```bash
-npm run build
-```
-
-You can preview the production build with `npm run preview`.
-
-> To deploy your app, you may need to install an [adapter](https://kit.svelte.dev/docs/adapters) for your target environment.
