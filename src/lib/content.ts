@@ -26,6 +26,8 @@ export interface Work {
 	readonly description: readonly string[];
 	readonly images: readonly WorkImage[];
 	readonly links: readonly WorkLink[];
+	/** Optional: people or projects to credit, shown in an Acknowledgement section. */
+	readonly acknowledgements?: readonly WorkLink[];
 }
 
 export const site = {
@@ -69,7 +71,11 @@ export const works: readonly Work[] = [
 				href: 'https://thats-totally-me.art'
 			}
 		],
-		links: [{ href: 'https://thats-totally-me.art', label: 'thats-totally-me.art' }]
+		links: [{ href: 'https://thats-totally-me.art', label: 'thats-totally-me.art' }],
+		acknowledgements: [
+			{ href: 'https://www.fernandachieco.com/', label: 'Fernanda Chieco' },
+			{ href: 'https://www.instagram.com/baklava_square_pants/', label: '@Baklava' }
+		]
 	}
 	// Template for a new work:
 	// {

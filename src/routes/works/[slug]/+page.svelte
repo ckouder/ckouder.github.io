@@ -41,4 +41,13 @@
 	</p>
 {/if}
 
+{#if work.acknowledgements && work.acknowledgements.length > 0}
+	<h2>Acknowledgement</h2>
+	<ul class="plain">
+		{#each work.acknowledgements as person (person.href)}
+			<li><a href={person.href} rel="noreferrer">{person.label}</a></li>
+		{/each}
+	</ul>
+{/if}
+
 <p><a href="/">← All works</a></p>
