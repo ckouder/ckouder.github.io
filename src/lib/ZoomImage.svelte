@@ -18,6 +18,17 @@
 		if (open && event.key === 'Escape') hide();
 	}
 
+	// Render the overlay on <body> so it escapes the carousel's transformed
+	// ancestors (a transformed ancestor would otherwise trap position: fixed).
+	function portal(node: HTMLElement) {
+		document.body.appendChild(node);
+		return {
+			destroy() {
+				node.remove();
+			}
+		};
+	}
+
 	$effect(() => {
 		if (open) dialog?.focus();
 	});
@@ -38,6 +49,7 @@
 {#if open}
 	<div
 		class="lightbox"
+		use:portal
 		role="dialog"
 		aria-modal="true"
 		aria-label={alt}
