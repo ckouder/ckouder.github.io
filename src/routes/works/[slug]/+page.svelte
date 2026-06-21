@@ -1,5 +1,7 @@
 <script lang="ts">
 	import { site } from '$lib/content';
+	import SeriesViewer from '$lib/SeriesViewer.svelte';
+	import ZoomImage from '$lib/ZoomImage.svelte';
 
 	let { data } = $props();
 	const work = $derived(data.work);
@@ -14,31 +16,12 @@
 </svelte:head>
 
 {#if work.pieces}
+	<p class="tag">Series · {work.pieces.length} works</p>
 	<h2>{work.title}</h2>
 	{#each work.description as paragraph (paragraph)}
 		<p>{paragraph}</p>
 	{/each}
-
-	{#each work.pieces as piece (piece.title + piece.images[0]?.src)}
-		<section class="piece">
-			{#each piece.images as image (image.src)}
-				<figure>
-					{#if image.href}
-						<a href={image.href} rel="noreferrer">
-							<img src={image.src} alt={image.alt} loading="lazy" />
-						</a>
-					{:else}
-						<img src={image.src} alt={image.alt} loading="lazy" />
-					{/if}
-				</figure>
-			{/each}
-			<h3>{piece.title}</h3>
-			<p class="meta">{piece.medium}, {piece.year}</p>
-			{#each piece.description ?? [] as paragraph (paragraph)}
-				<p>{paragraph}</p>
-			{/each}
-		</section>
-	{/each}
+	<SeriesViewer pieces={work.pieces} />
 {:else}
 	<h2>{work.title} ({work.year})</h2>
 	<p class="meta">
@@ -53,7 +36,7 @@
 					<img src={image.src} alt={image.alt} loading="lazy" />
 				</a>
 			{:else}
-				<img src={image.src} alt={image.alt} loading="lazy" />
+				<ZoomImage src={image.src} alt={image.alt} />
 			{/if}
 			<figcaption>{image.alt}</figcaption>
 		</figure>

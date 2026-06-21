@@ -4,7 +4,8 @@ test('home page lists works', async ({ page }) => {
 	await page.goto('/');
 	await expect(page.getByRole('heading', { name: 'Bingji Guo' })).toBeVisible();
 	await expect(page.getByRole('heading', { name: 'Works' })).toBeVisible();
-	await expect(page.getByRole('link', { name: 'Monuments' })).toBeVisible();
+	await expect(page.getByRole('link', { name: 'Monuments' }).first()).toBeVisible();
+	await expect(page.getByRole('link', { name: 'VOCAB 101' }).first()).toBeVisible();
 });
 
 test('work page shows title with year, metadata, and description', async ({ page }) => {
