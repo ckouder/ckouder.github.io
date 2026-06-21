@@ -44,9 +44,24 @@ describe('works', () => {
 
 	it('points images at the static works directory with alt text', () => {
 		for (const work of works) {
-			for (const image of work.images) {
+			const images = [...work.images, ...(work.pieces?.flatMap((piece) => piece.images) ?? [])];
+			for (const image of images) {
 				expect(image.src).toMatch(new RegExp(`^/works/${work.slug}/`));
 				expect(image.alt.trim()).not.toBe('');
+			}
+		}
+	});
+
+	it('has valid pieces for any series', () => {
+		for (const work of works) {
+			for (const piece of work.pieces ?? []) {
+				expect(piece.title.trim()).not.toBe('');
+				expect(piece.medium.trim()).not.toBe('');
+				expect(piece.year.trim()).not.toBe('');
+				expect(piece.images.length).toBeGreaterThan(0);
+				for (const paragraph of piece.description ?? []) {
+					expect(paragraph.trim()).not.toBe('');
+				}
 			}
 		}
 	});

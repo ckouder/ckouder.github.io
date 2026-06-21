@@ -13,28 +13,56 @@
 	/>
 </svelte:head>
 
-<h2>{work.title} ({work.year})</h2>
-<p class="meta">
-	{work.medium}{#if work.dimensions}
-		· {work.dimensions}{/if}
-</p>
+{#if work.pieces}
+	<h2>{work.title}</h2>
+	{#each work.description as paragraph (paragraph)}
+		<p>{paragraph}</p>
+	{/each}
 
-{#each work.images as image (image.src)}
-	<figure>
-		{#if image.href}
-			<a href={image.href} rel="noreferrer">
+	{#each work.pieces as piece (piece.title + piece.images[0]?.src)}
+		<section class="piece">
+			{#each piece.images as image (image.src)}
+				<figure>
+					{#if image.href}
+						<a href={image.href} rel="noreferrer">
+							<img src={image.src} alt={image.alt} loading="lazy" />
+						</a>
+					{:else}
+						<img src={image.src} alt={image.alt} loading="lazy" />
+					{/if}
+				</figure>
+			{/each}
+			<h3>{piece.title}</h3>
+			<p class="meta">{piece.medium}, {piece.year}</p>
+			{#each piece.description ?? [] as paragraph (paragraph)}
+				<p>{paragraph}</p>
+			{/each}
+		</section>
+	{/each}
+{:else}
+	<h2>{work.title} ({work.year})</h2>
+	<p class="meta">
+		{work.medium}{#if work.dimensions}
+			· {work.dimensions}{/if}
+	</p>
+
+	{#each work.images as image (image.src)}
+		<figure>
+			{#if image.href}
+				<a href={image.href} rel="noreferrer">
+					<img src={image.src} alt={image.alt} loading="lazy" />
+				</a>
+			{:else}
 				<img src={image.src} alt={image.alt} loading="lazy" />
-			</a>
-		{:else}
-			<img src={image.src} alt={image.alt} loading="lazy" />
-		{/if}
-		<figcaption>{image.alt}</figcaption>
-	</figure>
-{/each}
+			{/if}
+			<figcaption>{image.alt}</figcaption>
+		</figure>
+	{/each}
 
-{#each work.description as paragraph (paragraph)}
-	<p>{paragraph}</p>
-{/each}
+	{#each work.description as paragraph (paragraph)}
+		<p>{paragraph}</p>
+	{/each}
+{/if}
 
 {#if work.links.length > 0}
 	<p>

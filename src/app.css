@@ -98,6 +98,15 @@ figure {
 	margin: 1.5rem 0;
 }
 
+/* A piece within a series exhibition */
+section.piece {
+	margin: 2.5rem 0;
+}
+
+section.piece h3 {
+	margin-bottom: 0.25rem;
+}
+
 figcaption {
 	font-size: 0.875rem;
 	margin-top: 0.5rem;

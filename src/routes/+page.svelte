@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { site, works } from '$lib/content';
+	import { coverImage, site, works } from '$lib/content';
 </script>
 
 <svelte:head>
@@ -10,10 +10,11 @@
 <h2>Works</h2>
 <ul class="gallery">
 	{#each works as work (work.slug)}
+		{@const cover = coverImage(work)}
 		<li>
 			<a href="/works/{work.slug}">
-				{#if work.images.length > 0}
-					<img src={work.images[0].src} alt={work.images[0].alt} loading="lazy" />
+				{#if cover}
+					<img src={cover.src} alt={cover.alt} loading="lazy" />
 				{/if}
 				<span class="label">
 					<span class="title">{work.title}</span>

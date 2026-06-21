@@ -16,6 +16,15 @@ export interface WorkLink {
 	readonly label: string;
 }
 
+/** A single piece inside a series (a Work with `pieces`). */
+export interface WorkPiece {
+	readonly title: string;
+	readonly medium: string;
+	readonly year: string;
+	readonly description?: readonly string[];
+	readonly images: readonly WorkImage[];
+}
+
 export interface Work {
 	readonly slug: string;
 	readonly title: string;
@@ -28,6 +37,8 @@ export interface Work {
 	readonly links: readonly WorkLink[];
 	/** Optional: people or projects to credit, shown in an Acknowledgement section. */
 	readonly acknowledgements?: readonly WorkLink[];
+	/** Optional: when set, this entry is a series and renders its pieces as an exhibition. */
+	readonly pieces?: readonly WorkPiece[];
 }
 
 export const site = {
@@ -44,35 +55,41 @@ export const contact = {
 
 export const works: readonly Work[] = [
 	{
-		slug: 'room-tour',
-		title: 'Room Tour',
-		year: '2026',
-		medium: 'Crayon on wall',
-		description: [
-			'welcome to my room :) let me show you the parts of me that keep me safe and alive — the membrane, the receptor, the little feet i get around on. i don’t go out much. everything i need is already in here.',
-			'— cells'
-		],
-		images: [
-			{
-				src: '/works/room-tour/room-tour.jpg',
-				alt: 'Four photographs of a house labelled in crayon as a cell: a door reading “Cell”, a wall reading “Cell membrane”, a window corner reading “Receptor” and “Pseudopodia”, and a mirror selfie reading “Cells”'
-			}
-		],
-		links: []
-	},
-	{
-		slug: 'untitled-space',
-		title: 'Untitled',
+		slug: 'vocab-101',
+		title: 'VOCAB 101',
 		year: '2026',
 		medium: 'Crayon on wall',
 		description: [],
-		images: [
+		images: [],
+		links: [],
+		pieces: [
 			{
-				src: '/works/untitled-space/space.jpg',
-				alt: 'A window looking out onto a neighbourhood, with “↑ SPACE ↑” written in crayon across the glass'
+				title: 'Room Tour',
+				medium: 'Crayon on wall',
+				year: '2026',
+				description: [
+					'welcome to my room :) let me show you the parts of me that keep me safe and alive — the membrane, the receptor, the little feet i get around on. i don’t go out much. everything i need is already in here.',
+					'— cells'
+				],
+				images: [
+					{
+						src: '/works/vocab-101/room-tour.jpg',
+						alt: 'Four photographs of a house labelled in crayon as a cell: a door reading “Cell”, a wall reading “Cell membrane”, a window corner reading “Receptor” and “Pseudopodia”, and a mirror selfie reading “Cells”'
+					}
+				]
+			},
+			{
+				title: 'Untitled',
+				medium: 'Crayon on wall',
+				year: '2026',
+				images: [
+					{
+						src: '/works/vocab-101/space.jpg',
+						alt: 'A window looking out onto a neighbourhood, with “↑ SPACE ↑” written in crayon across the glass'
+					}
+				]
 			}
-		],
-		links: []
+		]
 	},
 	{
 		slug: 'untitled-fuji',
@@ -138,4 +155,9 @@ export const works: readonly Work[] = [
 
 export function findWork(slug: string): Work | undefined {
 	return works.find((work) => work.slug === slug);
+}
+
+/** The image used for a work's card in the gallery: its own first image, or a series' first piece image. */
+export function coverImage(work: Work): WorkImage | undefined {
+	return work.images[0] ?? work.pieces?.[0]?.images[0];
 }
