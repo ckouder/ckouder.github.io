@@ -74,7 +74,8 @@ export const works: readonly Work[] = [
 		links: [{ href: 'https://thats-totally-me.art', label: 'thats-totally-me.art' }],
 		acknowledgements: [
 			{ href: 'https://www.fernandachieco.com/', label: 'Fernanda Chieco' },
-			{ href: 'https://www.instagram.com/baklava_square_pants/', label: '@Baklava' }
+			{ href: 'https://www.instagram.com/baklava_square_pants/', label: '@Baklava' },
+			{ href: 'https://claude.ai/', label: 'Claude Opus 4.8' }
 		]
 	}
 	// Template for a new work:

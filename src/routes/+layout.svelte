@@ -37,4 +37,7 @@
 
 <footer>
 	<p class="meta">© {new Date().getFullYear()} {site.artist}</p>
+	<p class="meta">
+		Co-created by <a href="https://claude.ai/" rel="noreferrer">Claude Opus 4.8</a>
+	</p>
 </footer>
