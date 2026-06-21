@@ -7,12 +7,7 @@
 	<meta name="description" content="Artist statement of {site.artist}." />
 </svelte:head>
 
-<h2>Artist Statement / 艺术家自述</h2>
-
-<p class="meta">
-	The two versions are aligned paragraph by paragraph — each numbered paragraph in English
-	corresponds to the same numbered paragraph in Chinese.
-</p>
+<h2>Artist Statement</h2>
 
 <section lang="en">
 	<h3>English</h3>
