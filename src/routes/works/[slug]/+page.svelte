@@ -7,7 +7,10 @@
 
 <svelte:head>
 	<title>{work.title} — {site.title}</title>
-	<meta name="description" content={work.description[0]} />
+	<meta
+		name="description"
+		content={work.description[0] ?? `${work.title} — ${work.medium}, ${work.year}`}
+	/>
 </svelte:head>
 
 <h2>{work.title} ({work.year})</h2>

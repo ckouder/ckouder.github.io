@@ -44,6 +44,51 @@ export const contact = {
 
 export const works: readonly Work[] = [
 	{
+		slug: 'room-tour',
+		title: 'Room Tour',
+		year: '2026',
+		medium: 'Crayon on wall',
+		description: [
+			'welcome to my room :) let me show you the parts of me that keep me safe and alive — the membrane, the receptor, the little feet i get around on. i don’t go out much. everything i need is already in here.',
+			'— cells'
+		],
+		images: [
+			{
+				src: '/works/room-tour/room-tour.jpg',
+				alt: 'Four photographs of a house labelled in crayon as a cell: a door reading “Cell”, a wall reading “Cell membrane”, a window corner reading “Receptor” and “Pseudopodia”, and a mirror selfie reading “Cells”'
+			}
+		],
+		links: []
+	},
+	{
+		slug: 'untitled-space',
+		title: 'Untitled',
+		year: '2026',
+		medium: 'Crayon on wall',
+		description: [],
+		images: [
+			{
+				src: '/works/untitled-space/space.jpg',
+				alt: 'A window looking out onto a neighbourhood, with “↑ SPACE ↑” written in crayon across the glass'
+			}
+		],
+		links: []
+	},
+	{
+		slug: 'untitled-fuji',
+		title: 'Untitled',
+		year: '2026',
+		medium: 'Acrylic on canvas',
+		description: [],
+		images: [
+			{
+				src: '/works/untitled-fuji/fuji-mountain.jpg',
+				alt: 'A small white canvas resting on carpet, painted with the words “FUJI MOUNTAIN” in black'
+			}
+		],
+		links: []
+	},
+	{
 		slug: 'monuments',
 		title: 'Monuments',
 		year: '2026',

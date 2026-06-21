@@ -117,3 +117,43 @@ ul.plain li {
 	font-size: 0.875rem;
 	opacity: 0.75;
 }
+
+/* Exhibition-style works gallery */
+ul.gallery {
+	list-style: none;
+	margin: 1.5rem 0 0;
+	padding: 0;
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(min(100%, 15rem), 1fr));
+	gap: 2rem 1.5rem;
+	align-items: start;
+}
+
+ul.gallery li {
+	margin: 0;
+}
+
+ul.gallery a {
+	display: block;
+	text-decoration: none;
+}
+
+ul.gallery img {
+	width: 100%;
+	height: auto;
+	background: rgba(127, 127, 127, 0.1);
+}
+
+ul.gallery .label {
+	display: block;
+	margin-top: 0.6rem;
+}
+
+ul.gallery .title {
+	display: block;
+}
+
+ul.gallery a:hover .title {
+	text-decoration: underline;
+	text-underline-offset: 0.15em;
+}

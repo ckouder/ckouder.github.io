@@ -34,7 +34,8 @@ describe('works', () => {
 			expect(work.title.trim()).not.toBe('');
 			expect(work.year.trim()).not.toBe('');
 			expect(work.medium.trim()).not.toBe('');
-			expect(work.description.length).toBeGreaterThan(0);
+			// description is optional (some works carry no text), but any
+			// paragraph that is present must not be blank.
 			for (const paragraph of work.description) {
 				expect(paragraph.trim()).not.toBe('');
 			}
