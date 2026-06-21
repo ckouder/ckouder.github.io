@@ -7,8 +7,6 @@
 	<meta name="description" content="Artist statement of {site.artist}." />
 </svelte:head>
 
-<h2>Artist Statement</h2>
-
 <section lang="en">
 	<h3>English</h3>
 
