@@ -11,8 +11,7 @@
 
 	const navItems = [
 		{ href: '/', label: 'Works' },
-		{ href: '/statement', label: 'Statement' },
-		{ href: '/about', label: 'About' }
+		{ href: '/statement', label: 'Statement' }
 	];
 
 	function isCurrent(href: string): boolean {

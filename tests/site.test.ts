@@ -20,12 +20,6 @@ test('statement page renders both languages', async ({ page }) => {
 	await expect(page.getByRole('heading', { name: '中文' })).toBeVisible();
 });
 
-test('about page has contact links', async ({ page }) => {
-	await page.goto('/about');
-	await expect(page.getByRole('link', { name: 'GitHub' })).toBeVisible();
-	await expect(page.getByRole('link', { name: 'LinkedIn' })).toBeVisible();
-});
-
 test('unknown work returns 404', async ({ page }) => {
 	const response = await page.goto('/works/does-not-exist');
 	expect(response?.status()).toBe(404);
