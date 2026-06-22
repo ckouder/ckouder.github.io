@@ -80,7 +80,7 @@ export const works: readonly Work[] = [
 			},
 			{
 				title: 'Untitled',
-				medium: 'Crayon on wall',
+				medium: 'Crayon on window frame',
 				year: '2026',
 				images: [
 					{
