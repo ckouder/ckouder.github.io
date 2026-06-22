@@ -1,33 +1,37 @@
 <script lang="ts">
-	import { goto } from '$app/navigation';
+	import { untrack } from 'svelte';
+	import { goto, replaceState } from '$app/navigation';
+	import { site, type ViewerSlide } from '$lib/content';
 
-	export interface ViewerLink {
-		readonly href: string;
-		readonly label: string;
-	}
+	// `slides` is the static global sequence and `startIndex` only seeds the
+	// initial position, so both are read once (untracked) on mount.
+	let { slides, startIndex = 0 }: { slides: readonly ViewerSlide[]; startIndex?: number } =
+		$props();
 
-	export interface ViewerSlide {
-		readonly image?: { readonly src: string; readonly alt: string; readonly href?: string };
-		readonly title: string;
-		readonly meta: string;
-		readonly description: readonly string[];
-		readonly links?: readonly ViewerLink[];
-		readonly acknowledgements?: readonly ViewerLink[];
-	}
-
-	let { slides }: { slides: readonly ViewerSlide[] } = $props();
-
-	let index = $state(0);
+	let index = $state(untrack(() => startIndex));
 	let collapsed = $state(false);
-	const count = $derived(slides.length);
+
+	const count = untrack(() => slides.length);
 	const current = $derived(slides[index]);
+	const hasPrev = $derived(index > 0);
+	const hasNext = $derived(index < count - 1);
+
+	// Label a neighbouring slide: its work title when it belongs to a different
+	// work (a cross-work jump), otherwise its own piece title.
+	function labelFor(i: number): string {
+		const target = slides[i];
+		if (!target) return '';
+		return target.workSlug === current.workSlug ? target.title : target.workTitle;
+	}
+	const prevLabel = $derived(hasPrev ? labelFor(index - 1) : '');
+	const nextLabel = $derived(hasNext ? labelFor(index + 1) : '');
 
 	function prev() {
-		if (index > 0) index -= 1;
+		if (hasPrev) index -= 1;
 	}
 
 	function next() {
-		if (index < count - 1) index += 1;
+		if (hasNext) index += 1;
 	}
 
 	function onKeydown(event: KeyboardEvent) {
@@ -35,6 +39,17 @@
 		else if (event.key === 'ArrowLeft') prev();
 		else if (event.key === 'ArrowRight') next();
 	}
+
+	// Keep the address bar and document title in sync as navigation crosses works.
+	let syncedSlug = untrack(() => slides[startIndex]?.workSlug);
+	$effect(() => {
+		const slug = current.workSlug;
+		if (slug !== syncedSlug) {
+			syncedSlug = slug;
+			replaceState(`/works/${slug}`, {});
+			document.title = `${current.workTitle} — ${site.title}`;
+		}
+	});
 
 	// Lock background scroll while the full-screen viewer is open.
 	$effect(() => {
@@ -51,19 +66,18 @@
 <div class="viewer">
 	<a class="viewer-btn viewer-close" href="/" aria-label="Close and return home">×</a>
 
-	{#if count > 1}
-		<button
-			class="viewer-btn viewer-prev"
-			onclick={prev}
-			disabled={index === 0}
-			aria-label="Previous work">←</button
-		>
-		<button
-			class="viewer-btn viewer-next"
-			onclick={next}
-			disabled={index === count - 1}
-			aria-label="Next work">→</button
-		>
+	{#if hasPrev}
+		<div class="viewer-nav viewer-nav-prev">
+			<button class="viewer-btn" onclick={prev} aria-label="Previous: {prevLabel}">←</button>
+			<span class="viewer-nav-label">{prevLabel}</span>
+		</div>
+	{/if}
+
+	{#if hasNext}
+		<div class="viewer-nav viewer-nav-next">
+			<button class="viewer-btn" onclick={next} aria-label="Next: {nextLabel}">→</button>
+			<span class="viewer-nav-label">{nextLabel}</span>
+		</div>
 	{/if}
 
 	<div class="viewer-stage">
@@ -108,7 +122,6 @@
 						{/each}
 					</p>
 				{/if}
-				{#if count > 1}<p class="viewer-count">{index + 1} / {count}</p>{/if}
 			</div>
 		{/if}
 	</div>

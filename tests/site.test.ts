@@ -61,20 +61,35 @@ test('viewer info collapses to the corner and expands again', async ({ page }) =
 	await expect(page.locator('.viewer-info-body')).toBeVisible();
 });
 
-test('series viewer steps through pieces with Next/Previous', async ({ page }) => {
+test('navigation buttons are labelled and bounded at the global ends', async ({ page }) => {
+	// VOCAB 101 is the first work, so its first slide has no Previous.
 	await page.goto('/works/vocab-101');
-	const prev = page.getByRole('button', { name: 'Previous work' });
-	const next = page.getByRole('button', { name: 'Next work' });
+	await expect(page.locator('.viewer-nav-prev')).toHaveCount(0);
+	await expect(page.locator('.viewer-nav-next .viewer-nav-label')).toHaveText('Untitled');
 
-	await expect(prev).toBeDisabled();
-	await expect(next).toBeEnabled();
+	// That's Totally Me is the last work, so its last slide has no Next.
+	await page.goto('/works/thats-totally-me');
+	await expect(page.locator('.viewer-nav-next')).toHaveCount(0);
+});
+
+test('next continues across works at a series boundary', async ({ page }) => {
+	await page.goto('/works/vocab-101');
 	await expect(page.locator('.viewer-info')).toContainText('Room Tour');
 
-	await next.click();
-	await expect(next).toBeDisabled();
-	await expect(prev).toBeEnabled();
+	// Step to the last piece of the series.
+	await page.getByRole('button', { name: /^Next:/ }).click();
 	await expect(page.locator('.viewer-info')).toContainText('Crayon on window frame');
 
-	// The work image is shown at size inside the stage.
+	// Next again jumps into the following work.
+	await page.getByRole('button', { name: /^Next:/ }).click();
+	await expect(page).toHaveURL('/works/untitled-fuji');
+	await expect(page.locator('.viewer-info')).toContainText('Acrylic on canvas');
+});
+
+test('previous continues back to the prior work last slide', async ({ page }) => {
+	await page.goto('/works/untitled-fuji');
+	await page.getByRole('button', { name: /^Previous:/ }).click();
+	await expect(page).toHaveURL('/works/vocab-101');
+	await expect(page.locator('.viewer-info')).toContainText('Crayon on window frame');
 	await expect(page.locator('.viewer-stage img')).toBeVisible();
 });

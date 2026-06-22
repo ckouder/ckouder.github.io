@@ -161,3 +161,47 @@ export function findWork(slug: string): Work | undefined {
 export function coverImage(work: Work): WorkImage | undefined {
 	return work.images[0] ?? work.pieces?.[0]?.images[0];
 }
+
+/** One screen of the full-screen viewer: a single image (or none) plus its label text. */
+export interface ViewerSlide {
+	readonly workSlug: string;
+	readonly workTitle: string;
+	readonly title: string;
+	readonly meta: string;
+	readonly image?: WorkImage;
+	readonly description: readonly string[];
+	readonly links?: readonly WorkLink[];
+	readonly acknowledgements?: readonly WorkLink[];
+}
+
+function slidesForWork(work: Work): ViewerSlide[] {
+	if (work.pieces) {
+		return work.pieces.map((piece) => ({
+			workSlug: work.slug,
+			workTitle: work.title,
+			title: piece.title,
+			meta: `${piece.medium}, ${piece.year}`,
+			image: piece.images[0],
+			description: piece.description ?? []
+		}));
+	}
+	const images = work.images.length > 0 ? work.images : [undefined];
+	return images.map((image) => ({
+		workSlug: work.slug,
+		workTitle: work.title,
+		title: work.title,
+		meta: `${work.medium}, ${work.year}`,
+		image,
+		description: work.description,
+		links: work.links,
+		acknowledgements: work.acknowledgements
+	}));
+}
+
+/** Every work flattened into one ordered sequence, so the viewer can move across works. */
+export const viewerSlides: readonly ViewerSlide[] = works.flatMap(slidesForWork);
+
+/** Index of a work's first slide within {@link viewerSlides}. */
+export function firstSlideIndexForWork(slug: string): number {
+	return viewerSlides.findIndex((slide) => slide.workSlug === slug);
+}

@@ -1,27 +1,10 @@
 <script lang="ts">
-	import { site } from '$lib/content';
-	import WorkViewer, { type ViewerSlide } from '$lib/WorkViewer.svelte';
+	import { firstSlideIndexForWork, site, viewerSlides } from '$lib/content';
+	import WorkViewer from '$lib/WorkViewer.svelte';
 
 	let { data } = $props();
 	const work = $derived(data.work);
-
-	const slides = $derived<ViewerSlide[]>(
-		work.pieces
-			? work.pieces.map((piece) => ({
-					image: piece.images[0],
-					title: piece.title,
-					meta: `${piece.medium}, ${piece.year}`,
-					description: piece.description ?? []
-				}))
-			: (work.images.length > 0 ? work.images : [undefined]).map((image) => ({
-					image,
-					title: work.title,
-					meta: `${work.medium}, ${work.year}`,
-					description: work.description,
-					links: work.links,
-					acknowledgements: work.acknowledgements
-				}))
-	);
+	const startIndex = $derived(Math.max(0, firstSlideIndexForWork(work.slug)));
 </script>
 
 <svelte:head>
@@ -32,4 +15,4 @@
 	/>
 </svelte:head>
 
-<WorkViewer {slides} />
+<WorkViewer slides={viewerSlides} {startIndex} />

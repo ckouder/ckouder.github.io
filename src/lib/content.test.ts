@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { contact, findWork, site, works } from './content';
+import { contact, findWork, firstSlideIndexForWork, site, viewerSlides, works } from './content';
 
 const SLUG_PATTERN = /^[a-z0-9]+(?:-[a-z0-9]+)*$/;
 
@@ -69,5 +69,26 @@ describe('works', () => {
 	it('finds works by slug and returns undefined otherwise', () => {
 		expect(findWork(works[0].slug)).toEqual(works[0]);
 		expect(findWork('does-not-exist')).toBeUndefined();
+	});
+});
+
+describe('viewer sequence', () => {
+	it('includes at least one slide for every work, in work order', () => {
+		for (const work of works) {
+			const index = firstSlideIndexForWork(work.slug);
+			expect(index).toBeGreaterThanOrEqual(0);
+			expect(viewerSlides[index].workSlug).toBe(work.slug);
+		}
+		// Slides are grouped by work in the same order as `works`.
+		const order = [...new Set(viewerSlides.map((slide) => slide.workSlug))];
+		expect(order).toEqual(works.map((work) => work.slug));
+	});
+
+	it('gives every slide a label and meta', () => {
+		for (const slide of viewerSlides) {
+			expect(slide.title.trim()).not.toBe('');
+			expect(slide.workTitle.trim()).not.toBe('');
+			expect(slide.meta.trim()).not.toBe('');
+		}
 	});
 });
