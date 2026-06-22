@@ -57,7 +57,7 @@ export const works: readonly Work[] = [
 	{
 		slug: 'vocab-101',
 		title: 'VOCAB 101',
-		year: '2026',
+		year: 'ongoing',
 		medium: 'Crayon on wall',
 		description: [],
 		images: [],

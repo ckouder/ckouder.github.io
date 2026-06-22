@@ -17,7 +17,7 @@
 
 {#if work.pieces}
 	<p class="tag">Series · {work.pieces.length} works</p>
-	<h2>{work.title}</h2>
+	<h2>{work.title} ({work.year})</h2>
 	{#each work.description as paragraph (paragraph)}
 		<p>{paragraph}</p>
 	{/each}
