@@ -8,10 +8,37 @@ test('home page lists works', async ({ page }) => {
 	await expect(page.getByRole('link', { name: 'VOCAB 101' }).first()).toBeVisible();
 });
 
-test('work page shows title with year, metadata, and description', async ({ page }) => {
+test('work opens a full-screen black viewer with info and a close button', async ({ page }) => {
 	await page.goto('/works/monuments');
-	await expect(page.getByRole('heading', { name: 'Monuments (2026)' })).toBeVisible();
-	await expect(page.getByText('Interactive website, permanent web archive')).toBeVisible();
+	const viewer = page.locator('.viewer');
+	await expect(viewer).toBeVisible();
+
+	// Fills the viewport.
+	const viewport = page.viewportSize();
+	if (!viewport) throw new Error('no viewport');
+	const box = await viewer.boundingBox();
+	expect(box).not.toBeNull();
+	expect(box!.width).toBeGreaterThanOrEqual(viewport.width - 1);
+	expect(box!.height).toBeGreaterThanOrEqual(viewport.height - 1);
+
+	// Black background.
+	await expect(viewer).toHaveCSS('background-color', 'rgb(0, 0, 0)');
+
+	// Info in the corner.
+	await expect(page.locator('.viewer-info')).toContainText('Monuments');
+	await expect(page.locator('.viewer-info')).toContainText('Interactive website');
+
+	// Close returns to the homepage.
+	await page.getByRole('link', { name: 'Close and return home' }).click();
+	await expect(page).toHaveURL('/');
+	await expect(page.getByRole('heading', { name: 'Works' })).toBeVisible();
+});
+
+test('clicking a work card from the homepage opens the viewer', async ({ page }) => {
+	await page.goto('/');
+	await page.getByRole('link', { name: 'VOCAB 101' }).first().click();
+	await expect(page).toHaveURL('/works/vocab-101');
+	await expect(page.locator('.viewer')).toBeVisible();
 });
 
 test('statement page renders both languages', async ({ page }) => {
@@ -25,41 +52,20 @@ test('unknown work returns 404', async ({ page }) => {
 	expect(response?.status()).toBe(404);
 });
 
-test('series navigation disables arrows at the ends', async ({ page }) => {
+test('series viewer steps through pieces with Next/Previous', async ({ page }) => {
 	await page.goto('/works/vocab-101');
 	const prev = page.getByRole('button', { name: 'Previous work' });
 	const next = page.getByRole('button', { name: 'Next work' });
+
 	await expect(prev).toBeDisabled();
 	await expect(next).toBeEnabled();
+	await expect(page.locator('.viewer-info')).toContainText('Room Tour');
+
 	await next.click();
 	await expect(next).toBeDisabled();
 	await expect(prev).toBeEnabled();
-});
+	await expect(page.locator('.viewer-info')).toContainText('Crayon on window frame');
 
-test('series image opens a full-screen lightbox on every slide', async ({ page }) => {
-	await page.goto('/works/vocab-101');
-	const viewport = page.viewportSize();
-	if (!viewport) throw new Error('no viewport');
-
-	// First slide: open lightbox and assert it fills the viewport.
-	await page.locator('.series-slide').first().locator('.zoom-trigger').click();
-	const dialog = page.getByRole('dialog');
-	await expect(dialog).toBeVisible();
-	const box = await dialog.boundingBox();
-	expect(box).not.toBeNull();
-	expect(box!.width).toBeGreaterThanOrEqual(viewport.width - 1);
-	expect(box!.height).toBeGreaterThanOrEqual(viewport.height - 1);
-	await page.keyboard.press('Escape');
-	await expect(dialog).toBeHidden();
-
-	// Advance to the second slide and confirm its image also zooms.
-	await page.getByRole('button', { name: 'Next work' }).click();
-	await page.locator('.series-slide').nth(1).locator('.zoom-trigger').click();
-	await expect(page.getByRole('dialog')).toBeVisible();
-});
-
-test('single-work image opens a lightbox', async ({ page }) => {
-	await page.goto('/works/untitled-fuji');
-	await page.locator('.zoom-trigger').first().click();
-	await expect(page.getByRole('dialog')).toBeVisible();
+	// The work image is shown at size inside the stage.
+	await expect(page.locator('.viewer-stage img')).toBeVisible();
 });

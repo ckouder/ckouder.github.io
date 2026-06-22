@@ -94,10 +94,6 @@ img {
 	height: auto;
 }
 
-figure {
-	margin: 1.5rem 0;
-}
-
 /* Small uppercase tag, e.g. "Series" */
 .tag {
 	display: inline-block;
@@ -124,179 +120,114 @@ figure {
 	opacity: 0.6;
 }
 
-/* Series exhibition viewer: image + text side by side, arrows flanking it */
-.series {
-	display: grid;
-	grid-template-columns: auto minmax(0, 1fr) auto;
-	align-items: center;
-	gap: 1.25rem;
-	margin: 2rem 0;
-	/* break out wider than the text column so the arrows sit to the sides */
-	width: min(56rem, calc(100vw - 2rem));
-	margin-left: 50%;
-	transform: translateX(-50%);
-}
-
-.series.single {
-	grid-template-columns: minmax(0, 1fr);
-}
-
-.series-window {
-	grid-column: 2;
-	grid-row: 1;
-	overflow: hidden;
-}
-
-.series.single .series-window {
-	grid-column: 1;
-}
-
-.series-track {
-	display: flex;
-	align-items: flex-start;
-	transition: transform 0.3s ease;
-}
-
-.series-slide {
-	flex: 0 0 100%;
-	min-width: 0;
-	display: grid;
-	grid-template-columns: 1fr 1fr;
-	gap: 1.5rem;
-	align-items: start;
-}
-
-.series-info h3 {
-	margin: 0 0 0.25rem;
-}
-
-.series-nav {
-	grid-row: 1;
-	display: inline-flex;
-	align-items: center;
-	justify-content: center;
-	width: 2.5rem;
-	height: 2.5rem;
-	font: inherit;
-	font-size: 1.1rem;
-	line-height: 1;
-	border: 1px solid currentColor;
-	border-radius: 2px;
-	background: none;
-	color: inherit;
-	cursor: pointer;
-	transition: opacity 0.15s;
-}
-
-.series-nav:hover:not([disabled]) {
-	opacity: 0.6;
-}
-
-.series-prev {
-	grid-column: 1;
-}
-
-.series-next {
-	grid-column: 3;
-}
-
-.series-nav[disabled] {
-	opacity: 0.25;
-	cursor: default;
-}
-
-@media (max-width: 40rem) {
-	.series {
-		grid-template-columns: 1fr;
-		gap: 0.75rem;
-	}
-
-	.series-window {
-		grid-column: 1;
-		grid-row: 1;
-	}
-
-	.series-slide {
-		grid-template-columns: 1fr;
-	}
-
-	.series-prev {
-		grid-column: 1;
-		grid-row: 2;
-		justify-self: start;
-	}
-
-	.series-next {
-		grid-column: 1;
-		grid-row: 2;
-		justify-self: end;
-	}
-}
-
-/* Click-to-zoom image + lightbox overlay */
-.zoom-trigger {
-	display: block;
-	width: 100%;
-	padding: 0;
-	border: 0;
-	background: none;
-	cursor: zoom-in;
-}
-
-.zoom-trigger img {
-	background: rgba(127, 127, 127, 0.1);
-}
-
-.lightbox {
+/* Full-screen work viewer */
+.viewer {
 	position: fixed;
 	inset: 0;
-	z-index: 100;
+	z-index: 200;
+	background: #000;
+	color: #fff;
+}
+
+.viewer-stage {
+	position: absolute;
+	inset: 0;
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	padding: 0;
-	background: rgba(0, 0, 0, 0.92);
-	cursor: zoom-out;
+	padding: 2.5rem;
+	box-sizing: border-box;
 }
 
-.lightbox img {
+.viewer-stage img {
 	max-width: 100%;
 	max-height: 100%;
 	width: auto;
 	height: auto;
 }
 
-.lightbox-close {
+.viewer-btn {
 	position: fixed;
-	top: 1rem;
-	right: 1rem;
+	z-index: 1;
 	display: inline-flex;
 	align-items: center;
 	justify-content: center;
 	width: 2.5rem;
 	height: 2.5rem;
-	font-size: 1.5rem;
+	font: inherit;
+	font-size: 1.25rem;
 	line-height: 1;
 	border: 1px solid rgba(255, 255, 255, 0.6);
 	border-radius: 2px;
-	background: none;
+	background: rgba(0, 0, 0, 0.35);
 	color: #fff;
+	text-decoration: none;
 	cursor: pointer;
+	transition: opacity 0.15s;
 }
 
-figcaption {
-	font-size: 0.875rem;
-	margin-top: 0.5rem;
+.viewer-btn:hover:not([disabled]) {
+	opacity: 0.6;
 }
 
-ul.plain {
-	list-style: none;
+.viewer-btn[disabled] {
+	opacity: 0.25;
+	cursor: default;
+}
+
+.viewer-close {
+	top: 1rem;
+	right: 1rem;
+	font-size: 1.5rem;
+}
+
+.viewer-prev {
+	top: 50%;
+	left: 1rem;
+	transform: translateY(-50%);
+}
+
+.viewer-next {
+	top: 50%;
+	right: 1rem;
+	transform: translateY(-50%);
+}
+
+.viewer-info {
+	position: fixed;
+	right: 1.25rem;
+	bottom: 1rem;
+	z-index: 1;
+	max-width: min(28rem, 80vw);
+	text-align: right;
+	text-shadow: 0 1px 4px rgba(0, 0, 0, 0.9);
+}
+
+.viewer-info p {
 	margin: 0;
-	padding: 0;
+	font-size: 0.85rem;
+	line-height: 1.45;
 }
 
-ul.plain li {
-	margin: 0 0 1.25rem;
+.viewer-info a {
+	color: #fff;
+}
+
+.viewer-title {
+	font-weight: 600;
+}
+
+.viewer-meta,
+.viewer-count {
+	opacity: 0.7;
+}
+
+.viewer-desc {
+	margin-top: 0.5rem !important;
+}
+
+.viewer-count {
+	margin-top: 0.5rem !important;
 }
 
 .meta {

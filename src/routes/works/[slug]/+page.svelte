@@ -1,10 +1,27 @@
 <script lang="ts">
 	import { site } from '$lib/content';
-	import SeriesViewer from '$lib/SeriesViewer.svelte';
-	import ZoomImage from '$lib/ZoomImage.svelte';
+	import WorkViewer, { type ViewerSlide } from '$lib/WorkViewer.svelte';
 
 	let { data } = $props();
 	const work = $derived(data.work);
+
+	const slides = $derived<ViewerSlide[]>(
+		work.pieces
+			? work.pieces.map((piece) => ({
+					image: piece.images[0],
+					title: piece.title,
+					meta: `${piece.medium}, ${piece.year}`,
+					description: piece.description ?? []
+				}))
+			: (work.images.length > 0 ? work.images : [undefined]).map((image) => ({
+					image,
+					title: work.title,
+					meta: `${work.medium}, ${work.year}`,
+					description: work.description,
+					links: work.links,
+					acknowledgements: work.acknowledgements
+				}))
+	);
 </script>
 
 <svelte:head>
@@ -15,53 +32,4 @@
 	/>
 </svelte:head>
 
-{#if work.pieces}
-	<p class="tag">Series · {work.pieces.length} works</p>
-	<h2>{work.title} ({work.year})</h2>
-	{#each work.description as paragraph (paragraph)}
-		<p>{paragraph}</p>
-	{/each}
-	<SeriesViewer pieces={work.pieces} />
-{:else}
-	<h2>{work.title} ({work.year})</h2>
-	<p class="meta">
-		{work.medium}{#if work.dimensions}
-			· {work.dimensions}{/if}
-	</p>
-
-	{#each work.images as image (image.src)}
-		<figure>
-			{#if image.href}
-				<a href={image.href} rel="noreferrer">
-					<img src={image.src} alt={image.alt} loading="lazy" />
-				</a>
-			{:else}
-				<ZoomImage src={image.src} alt={image.alt} />
-			{/if}
-			<figcaption>{image.alt}</figcaption>
-		</figure>
-	{/each}
-
-	{#each work.description as paragraph (paragraph)}
-		<p>{paragraph}</p>
-	{/each}
-{/if}
-
-{#if work.links.length > 0}
-	<p>
-		{#each work.links as link (link.href)}
-			<a href={link.href} rel="noreferrer">{link.label}</a>{' '}
-		{/each}
-	</p>
-{/if}
-
-{#if work.acknowledgements && work.acknowledgements.length > 0}
-	<h2>Acknowledgement</h2>
-	<ul class="plain">
-		{#each work.acknowledgements as person (person.href)}
-			<li><a href={person.href} rel="noreferrer">{person.label}</a></li>
-		{/each}
-	</ul>
-{/if}
-
-<p><a href="/">← All works</a></p>
+<WorkViewer {slides} />
