@@ -52,6 +52,15 @@ test('unknown work returns 404', async ({ page }) => {
 	expect(response?.status()).toBe(404);
 });
 
+test('viewer info collapses to the corner and expands again', async ({ page }) => {
+	await page.goto('/works/untitled-fuji');
+	await expect(page.locator('.viewer-info-body')).toBeVisible();
+	await page.getByRole('button', { name: 'Hide details' }).click();
+	await expect(page.locator('.viewer-info-body')).toHaveCount(0);
+	await page.getByRole('button', { name: 'Show details' }).click();
+	await expect(page.locator('.viewer-info-body')).toBeVisible();
+});
+
 test('series viewer steps through pieces with Next/Previous', async ({ page }) => {
 	await page.goto('/works/vocab-101');
 	const prev = page.getByRole('button', { name: 'Previous work' });

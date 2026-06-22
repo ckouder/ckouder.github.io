@@ -18,6 +18,7 @@
 	let { slides }: { slides: readonly ViewerSlide[] } = $props();
 
 	let index = $state(0);
+	let collapsed = $state(false);
 	const count = $derived(slides.length);
 	const current = $derived(slides[index]);
 
@@ -77,27 +78,38 @@
 		{/if}
 	</div>
 
-	<div class="viewer-info">
-		<p class="viewer-title">{current.title}</p>
-		{#if current.meta}<p class="viewer-meta">{current.meta}</p>{/if}
-		{#each current.description as paragraph (paragraph)}
-			<p class="viewer-desc">{paragraph}</p>
-		{/each}
-		{#if current.links && current.links.length > 0}
-			<p class="viewer-links">
-				{#each current.links as link (link.href)}
-					<a href={link.href} rel="noreferrer">{link.label}</a>{' '}
+	<div class="viewer-info" class:collapsed>
+		<button
+			class="viewer-toggle"
+			onclick={() => (collapsed = !collapsed)}
+			aria-expanded={!collapsed}
+			aria-label={collapsed ? 'Show details' : 'Hide details'}>{collapsed ? '▴' : '▾'}</button
+		>
+
+		{#if !collapsed}
+			<div class="viewer-info-body">
+				<p class="viewer-title">{current.title}</p>
+				{#if current.meta}<p class="viewer-meta">{current.meta}</p>{/if}
+				{#each current.description as paragraph (paragraph)}
+					<p class="viewer-desc">{paragraph}</p>
 				{/each}
-			</p>
+				{#if current.links && current.links.length > 0}
+					<p class="viewer-links">
+						{#each current.links as link (link.href)}
+							<a href={link.href} rel="noreferrer">{link.label}</a>{' '}
+						{/each}
+					</p>
+				{/if}
+				{#if current.acknowledgements && current.acknowledgements.length > 0}
+					<p class="viewer-ack">
+						Acknowledgement:
+						{#each current.acknowledgements as person (person.href)}
+							<a href={person.href} rel="noreferrer">{person.label}</a>{' '}
+						{/each}
+					</p>
+				{/if}
+				{#if count > 1}<p class="viewer-count">{index + 1} / {count}</p>{/if}
+			</div>
 		{/if}
-		{#if current.acknowledgements && current.acknowledgements.length > 0}
-			<p class="viewer-ack">
-				Acknowledgement:
-				{#each current.acknowledgements as person (person.href)}
-					<a href={person.href} rel="noreferrer">{person.label}</a>{' '}
-				{/each}
-			</p>
-		{/if}
-		{#if count > 1}<p class="viewer-count">{index + 1} / {count}</p>{/if}
 	</div>
 </div>
