@@ -106,6 +106,105 @@ export const works: readonly Work[] = [
 		links: []
 	},
 	{
+		slug: 'armchair',
+		title: 'Armchair',
+		// Medium inferred as oil on canvas — confirm.
+		year: '2026',
+		medium: 'Oil on canvas',
+		description: [],
+		images: [
+			{
+				src: '/works/armchair/armchair.jpg',
+				alt: 'A painting of a green tufted leather armchair — its buttoned back and seat cushions.'
+			}
+		],
+		links: []
+	},
+	{
+		slug: 'sink',
+		title: 'Sink',
+		year: '2026',
+		medium: 'Oil on canvas',
+		description: [],
+		images: [
+			{
+				src: '/works/sink/sink.jpg',
+				alt: 'A painting of a bathroom sink with a terracotta-coloured surround, seen from above.'
+			}
+		],
+		links: []
+	},
+	{
+		slug: 'still-life-pacifica',
+		title: 'Still Life',
+		year: '2026',
+		medium: 'Oil on canvas',
+		description: [],
+		images: [
+			{
+				src: '/works/still-life-pacifica/pacifica.jpg',
+				alt: 'A painting of a foggy city street beside a vertical sign reading “PACIFICA”.'
+			}
+		],
+		links: []
+	},
+	{
+		slug: 'still-life-cylinders',
+		title: 'Still Life',
+		year: '2026',
+		medium: 'Oil on canvas',
+		description: [],
+		images: [
+			{
+				src: '/works/still-life-cylinders/cylinders.jpg',
+				alt: 'A still-life painting of two cylinders resting on pale blocks.'
+			}
+		],
+		links: []
+	},
+	{
+		slug: 'dissolution',
+		title: 'Dissolution',
+		year: '2026',
+		medium: 'Oil on canvas',
+		description: [],
+		images: [
+			{
+				src: '/works/dissolution/dissolution.jpg',
+				alt: 'An abstract painting of tangled pink, red and green marks within a black border.'
+			}
+		],
+		links: []
+	},
+	{
+		slug: 'untitled-face',
+		title: 'Untitled',
+		year: '2026',
+		medium: 'Oil on canvas',
+		description: [],
+		images: [
+			{
+				src: '/works/untitled-face/face.jpg',
+				alt: 'A painting of a face in profile with a single grey eye, a pale nose and red lips.'
+			}
+		],
+		links: []
+	},
+	{
+		slug: 'arm',
+		title: 'Arm',
+		year: '2026',
+		medium: 'Oil on canvas',
+		description: [],
+		images: [
+			{
+				src: '/works/arm/arm.jpg',
+				alt: 'A painting of a flexed arm and bicep against a dark brown background.'
+			}
+		],
+		links: []
+	},
+	{
 		slug: 'monuments',
 		title: 'Monuments',
 		year: '2026',
