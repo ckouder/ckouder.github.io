@@ -108,9 +108,8 @@ export const works: readonly Work[] = [
 	{
 		slug: 'armchair',
 		title: 'Armchair',
-		// Medium inferred as oil on canvas — confirm.
 		year: '2026',
-		medium: 'Oil on canvas',
+		medium: 'Acrylic on canvas',
 		description: [],
 		images: [
 			{
@@ -124,7 +123,7 @@ export const works: readonly Work[] = [
 		slug: 'sink',
 		title: 'Sink',
 		year: '2026',
-		medium: 'Oil on canvas',
+		medium: 'Oil on panel',
 		description: [],
 		images: [
 			{
@@ -138,7 +137,7 @@ export const works: readonly Work[] = [
 		slug: 'still-life-pacifica',
 		title: 'Still Life',
 		year: '2026',
-		medium: 'Oil on canvas',
+		medium: 'Acrylic on canvas',
 		description: [],
 		images: [
 			{
@@ -152,7 +151,7 @@ export const works: readonly Work[] = [
 		slug: 'still-life-cylinders',
 		title: 'Still Life',
 		year: '2026',
-		medium: 'Oil on canvas',
+		medium: 'Acrylic on canvas',
 		description: [],
 		images: [
 			{
@@ -166,7 +165,7 @@ export const works: readonly Work[] = [
 		slug: 'dissolution',
 		title: 'Dissolution',
 		year: '2026',
-		medium: 'Oil on canvas',
+		medium: 'Acrylic on canvas',
 		description: [],
 		images: [
 			{
@@ -180,7 +179,7 @@ export const works: readonly Work[] = [
 		slug: 'untitled-face',
 		title: 'Untitled',
 		year: '2026',
-		medium: 'Oil on canvas',
+		medium: 'Acrylic and oil pastel on canvas',
 		description: [],
 		images: [
 			{
@@ -194,7 +193,7 @@ export const works: readonly Work[] = [
 		slug: 'arm',
 		title: 'Arm',
 		year: '2026',
-		medium: 'Oil on canvas',
+		medium: 'Acrylic on canvas',
 		description: [],
 		images: [
 			{
