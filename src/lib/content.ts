@@ -91,18 +91,19 @@ export const works: readonly Work[] = [
 			{ href: 'https://claude.ai/', label: 'Claude Opus 4.8' }
 		]
 	},
-	{
-		slug: 'monuments',
-		title: 'Monuments',
-		year: '2026',
-		medium: 'Interactive website, permanent web archive (Arweave), WebGL',
-		description: [
-			'An online monument in three sections — birthplace, cemetery, and wish — rendered as day, dawn, and night. Visitors leave records of where they were born, who they have lost, and what they hope for; each record becomes a small light in a shared landscape.',
-			'Entries are written to permanent storage, so the monument outlives the website that displays it.'
-		],
-		images: [],
-		links: []
-	},
+	// Unpublished — Monuments is still in progress. Uncomment to put it back.
+	// {
+	// 	slug: 'monuments',
+	// 	title: 'Monuments',
+	// 	year: '2026',
+	// 	medium: 'Interactive website, permanent web archive (Arweave), WebGL',
+	// 	description: [
+	// 		'An online monument in three sections — birthplace, cemetery, and wish — rendered as day, dawn, and night. Visitors leave records of where they were born, who they have lost, and what they hope for; each record becomes a small light in a shared landscape.',
+	// 		'Entries are written to permanent storage, so the monument outlives the website that displays it.'
+	// 	],
+	// 	images: [],
+	// 	links: []
+	// },
 	{
 		slug: 'room-tour',
 		title: 'Room Tour',

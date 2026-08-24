@@ -4,12 +4,12 @@ test('home page lists works', async ({ page }) => {
 	await page.goto('/');
 	await expect(page.getByRole('heading', { name: 'Bingji Guo' })).toBeVisible();
 	await expect(page.getByRole('heading', { name: 'Works' })).toBeVisible();
-	await expect(page.getByRole('link', { name: 'Monuments' }).first()).toBeVisible();
+	await expect(page.getByRole('link', { name: "That's Totally Me" }).first()).toBeVisible();
 	await expect(page.getByRole('link', { name: 'Room Tour' }).first()).toBeVisible();
 });
 
 test('work opens a full-screen black viewer with info and a close button', async ({ page }) => {
-	await page.goto('/works/monuments');
+	await page.goto('/works/room-tour');
 	const viewer = page.locator('.viewer');
 	await expect(viewer).toBeVisible();
 
@@ -25,8 +25,8 @@ test('work opens a full-screen black viewer with info and a close button', async
 	await expect(viewer).toHaveCSS('background-color', 'rgb(0, 0, 0)');
 
 	// Info in the corner.
-	await expect(page.locator('.viewer-info')).toContainText('Monuments');
-	await expect(page.locator('.viewer-info')).toContainText('Interactive website');
+	await expect(page.locator('.viewer-info')).toContainText('Room Tour');
+	await expect(page.locator('.viewer-info')).toContainText('Crayon on wall');
 
 	// Close returns to the homepage.
 	await page.getByRole('link', { name: 'Close and return home' }).click();
