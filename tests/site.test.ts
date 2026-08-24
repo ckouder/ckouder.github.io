@@ -5,7 +5,7 @@ test('home page lists works', async ({ page }) => {
 	await expect(page.getByRole('heading', { name: 'Bingji Guo' })).toBeVisible();
 	await expect(page.getByRole('heading', { name: 'Works' })).toBeVisible();
 	await expect(page.getByRole('link', { name: 'Monuments' }).first()).toBeVisible();
-	await expect(page.getByRole('link', { name: 'VOCAB 101' }).first()).toBeVisible();
+	await expect(page.getByRole('link', { name: 'Room Tour' }).first()).toBeVisible();
 });
 
 test('work opens a full-screen black viewer with info and a close button', async ({ page }) => {
@@ -36,8 +36,8 @@ test('work opens a full-screen black viewer with info and a close button', async
 
 test('clicking a work card from the homepage opens the viewer', async ({ page }) => {
 	await page.goto('/');
-	await page.getByRole('link', { name: 'VOCAB 101' }).first().click();
-	await expect(page).toHaveURL('/works/vocab-101');
+	await page.getByRole('link', { name: 'Room Tour' }).first().click();
+	await expect(page).toHaveURL('/works/room-tour');
 	await expect(page.locator('.viewer')).toBeVisible();
 });
 
@@ -62,34 +62,29 @@ test('viewer info collapses to the corner and expands again', async ({ page }) =
 });
 
 test('navigation buttons are labelled and bounded at the global ends', async ({ page }) => {
-	// VOCAB 101 is the first work, so its first slide has no Previous.
-	await page.goto('/works/vocab-101');
+	// Untitled (SPACE) leads the portfolio, so its slide has no Previous.
+	await page.goto('/works/untitled-space');
 	await expect(page.locator('.viewer-nav-prev')).toHaveCount(0);
-	await expect(page.locator('.viewer-nav-next .viewer-nav-label')).toHaveText('Untitled');
+	await expect(page.locator('.viewer-nav-next .viewer-nav-label')).toHaveText("That's Totally Me");
 
-	// That's Totally Me is the last work, so its last slide has no Next.
-	await page.goto('/works/thats-totally-me');
+	// Arm is the last work, so its slide has no Next.
+	await page.goto('/works/arm');
 	await expect(page.locator('.viewer-nav-next')).toHaveCount(0);
 });
 
-test('next continues across works at a series boundary', async ({ page }) => {
-	await page.goto('/works/vocab-101');
-	await expect(page.locator('.viewer-info')).toContainText('Room Tour');
-
-	// Step to the last piece of the series.
-	await page.getByRole('button', { name: /^Next:/ }).click();
+test('next continues across works', async ({ page }) => {
+	await page.goto('/works/untitled-space');
 	await expect(page.locator('.viewer-info')).toContainText('Crayon on window frame');
 
-	// Next again jumps into the following work.
 	await page.getByRole('button', { name: /^Next:/ }).click();
-	await expect(page).toHaveURL('/works/untitled-fuji');
-	await expect(page.locator('.viewer-info')).toContainText('Acrylic on canvas');
+	await expect(page).toHaveURL('/works/thats-totally-me');
+	await expect(page.locator('.viewer-info')).toContainText("That's Totally Me");
 });
 
-test('previous continues back to the prior work last slide', async ({ page }) => {
-	await page.goto('/works/untitled-fuji');
+test('previous continues back to the prior work', async ({ page }) => {
+	await page.goto('/works/thats-totally-me');
 	await page.getByRole('button', { name: /^Previous:/ }).click();
-	await expect(page).toHaveURL('/works/vocab-101');
+	await expect(page).toHaveURL('/works/untitled-space');
 	await expect(page.locator('.viewer-info')).toContainText('Crayon on window frame');
 	await expect(page.locator('.viewer-stage img')).toBeVisible();
 });

@@ -55,41 +55,70 @@ export const contact = {
 
 export const works: readonly Work[] = [
 	{
-		slug: 'vocab-101',
-		title: 'VOCAB 101',
-		year: 'ongoing',
-		medium: 'Crayon on wall',
+		slug: 'untitled-space',
+		title: 'Untitled',
+		year: '2026',
+		medium: 'Crayon on window frame',
 		description: [],
-		images: [],
-		links: [],
-		pieces: [
+		images: [
 			{
-				title: 'Room Tour',
-				medium: 'Crayon on wall',
-				year: '2026',
-				description: [
-					'welcome to my room :) let me show you the parts of me that keep me safe and alive — the membrane, the receptor, the little feet i get around on. i don’t go out much. everything i need is already in here.',
-					'— cells'
-				],
-				images: [
-					{
-						src: '/works/vocab-101/room-tour.jpg',
-						alt: 'Four photographs of a house labelled in crayon as a cell: a door reading “Cell”, a wall reading “Cell membrane”, a window corner reading “Receptor” and “Pseudopodia”, and a mirror selfie reading “Cells”'
-					}
-				]
-			},
-			{
-				title: 'Untitled',
-				medium: 'Crayon on window frame',
-				year: '2026',
-				images: [
-					{
-						src: '/works/vocab-101/space.jpg',
-						alt: 'A window looking out onto a neighbourhood, with “↑ SPACE ↑” written in crayon across the glass'
-					}
-				]
+				src: '/works/untitled-space/space.jpg',
+				alt: 'A window looking out onto a neighbourhood, with “↑ SPACE ↑” written in crayon across the glass'
 			}
+		],
+		links: []
+	},
+	{
+		slug: 'thats-totally-me',
+		title: "That's Totally Me",
+		// TODO: confirm year and refine the description.
+		year: '2026',
+		medium: 'Interactive website',
+		description: [
+			'Visitors are handed the artist’s lost facial features — eyes, eyebrows, nose, mouth, ears — and asked to drag them back onto his blanked-out face.'
+		],
+		images: [
+			{
+				src: '/works/thats-totally-me/oh-nooo.jpg',
+				alt: 'Screenshot: a face with its features removed, beside a list of draggable eyes, eyebrows, nose, mouth, and ear',
+				href: 'https://thats-totally-me.art'
+			}
+		],
+		links: [{ href: 'https://thats-totally-me.art', label: 'thats-totally-me.art' }],
+		acknowledgements: [
+			{ href: 'https://www.fernandachieco.com/', label: 'Fernanda Chieco' },
+			{ href: 'https://www.instagram.com/baklava_square_pants/', label: '@Baklava' },
+			{ href: 'https://claude.ai/', label: 'Claude Opus 4.8' }
 		]
+	},
+	{
+		slug: 'monuments',
+		title: 'Monuments',
+		year: '2026',
+		medium: 'Interactive website, permanent web archive (Arweave), WebGL',
+		description: [
+			'An online monument in three sections — birthplace, cemetery, and wish — rendered as day, dawn, and night. Visitors leave records of where they were born, who they have lost, and what they hope for; each record becomes a small light in a shared landscape.',
+			'Entries are written to permanent storage, so the monument outlives the website that displays it.'
+		],
+		images: [],
+		links: []
+	},
+	{
+		slug: 'room-tour',
+		title: 'Room Tour',
+		year: '2026',
+		medium: 'Crayon on wall',
+		description: [
+			'welcome to my room :) let me show you the parts of me that keep me safe and alive — the membrane, the receptor, the little feet i get around on. i don’t go out much. everything i need is already in here.',
+			'— cells'
+		],
+		images: [
+			{
+				src: '/works/room-tour/room-tour.jpg',
+				alt: 'Four photographs of a house labelled in crayon as a cell: a door reading “Cell”, a wall reading “Cell membrane”, a window corner reading “Receptor” and “Pseudopodia”, and a mirror selfie reading “Cells”'
+			}
+		],
+		links: []
 	},
 	{
 		slug: 'untitled-fuji',
@@ -202,41 +231,6 @@ export const works: readonly Work[] = [
 			}
 		],
 		links: []
-	},
-	{
-		slug: 'monuments',
-		title: 'Monuments',
-		year: '2026',
-		medium: 'Interactive website, permanent web archive (Arweave), WebGL',
-		description: [
-			'An online monument in three sections — birthplace, cemetery, and wish — rendered as day, dawn, and night. Visitors leave records of where they were born, who they have lost, and what they hope for; each record becomes a small light in a shared landscape.',
-			'Entries are written to permanent storage, so the monument outlives the website that displays it.'
-		],
-		images: [],
-		links: []
-	},
-	{
-		slug: 'thats-totally-me',
-		title: "That's Totally Me",
-		// TODO: confirm year and refine the description.
-		year: '2026',
-		medium: 'Interactive website',
-		description: [
-			'Visitors are handed the artist’s lost facial features — eyes, eyebrows, nose, mouth, ears — and asked to drag them back onto his blanked-out face.'
-		],
-		images: [
-			{
-				src: '/works/thats-totally-me/oh-nooo.jpg',
-				alt: 'Screenshot: a face with its features removed, beside a list of draggable eyes, eyebrows, nose, mouth, and ear',
-				href: 'https://thats-totally-me.art'
-			}
-		],
-		links: [{ href: 'https://thats-totally-me.art', label: 'thats-totally-me.art' }],
-		acknowledgements: [
-			{ href: 'https://www.fernandachieco.com/', label: 'Fernanda Chieco' },
-			{ href: 'https://www.instagram.com/baklava_square_pants/', label: '@Baklava' },
-			{ href: 'https://claude.ai/', label: 'Claude Opus 4.8' }
-		]
 	}
 	// Template for a new work:
 	// {
